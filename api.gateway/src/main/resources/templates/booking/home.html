@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Edemium</title>
+    <meta charset='utf-8'>
+    <link rel="stylesheet" th:href="@{/common/css/header.css}">
+    <link rel="stylesheet" th:href="@{/booking/css/home.css}">
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
+</head>
+
+<body>
+    <header th:replace="~{/common/header.html :: header}"></header>
+    <main class="container">
+        <section class="hero-card">
+            <h1>Вітаємо в Edemium</h1>
+            <p>Ваш комфорт — наша турбота. Знайдіть та забронюйте ідеальний номер за лічені хвилини за допомогою
+                нашого цифрового сервісу.</p>
+            <a th:href="@{/rooms}" class="cta">Переглянути номери</a>
+        </section>
+
+        <h2 class="section-title">Чому Edemium?</h2>
+        <section class="features-grid">
+            <div class="card feature-card">
+                <h3>Ексклюзивні номери</h3>
+                <p>Тільки перевірені апартаменти з реальними фото та повним описом зручностей.</p>
+            </div>
+            <div class="card feature-card">
+                <h3>Цифровий сервіс</h3>
+                <p>Керуйте бронюванням, замовляйте послуги та отримуйте підтримку онлайн.</p>
+            </div>
+            <div class="card feature-card">
+                <h3>Гарантія ціни</h3>
+                <p>Бронюйте напряму без прихованих комісій та зборів посередників.</p>
+            </div>
+        </section>
+
+        <h2 class="section-title">Наші найкращі номери</h2>
+        <div class="room-grid">
+            <div class="card room-card">
+                <div class="room-image-container">
+                    <img src="https://placehold.co/400x300/2b7a78/ffffff?text=Люкс" alt="Люкс з видом на море">
+                </div>
+                <div class="room-card-content">
+                    <div class="room-meta">
+                        <span>3500.00 UAH / ніч</span>
+                        <span>4 гостя/ей</span>
+                    </div>
+                    <h3>Люкс з видом на море</h3>
+                    <p>Просторий номер преміум-класу з панорамними вікнами та балконом.</p>
+                    <div class="facilities-list">
+                        <span class="facility-pill">Wi-Fi</span>
+                        <span class="facility-pill">Кондиціонер</span>
+                        <span class="facility-pill">Вид на море</span>
+                        <span class="facility-pill">Джакузі</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card room-card">
+                <div class="room-image-container">
+                    <img src="https://placehold.co/400x300/2b7a78/ffffff?text=Стандарт" alt="Стандарт">
+                </div>
+                <div class="room-card-content">
+                    <div class="room-meta">
+                        <span>1800.00 UAH / ніч</span>
+                        <span>2 гостя</span>
+                    </div>
+                    <h3>Комфорт-стандарт</h3>
+                    <p>Затишний та функціональний номер, ідеально підходить для ділових поїздок.</p>
+                    <div class="facilities-list">
+                        <span class="facility-pill">Wi-Fi</span>
+                        <span class="facility-pill">Кондиціонер</span>
+                        <span class="facility-pill">Робочий стіл</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card room-card">
+                <div class="room-image-container">
+                    <img src="https://placehold.co/400x300/2b7a78/ffffff?text=Апартаменти" alt="Апартаменти">
+                </div>
+                <div class="room-card-content">
+                    <div class="room-meta">
+                        <span>2400.00 UAH / ніч</span>
+                        <span>3 гостя/ей</span>
+                    </div>
+                    <h3>Сімейні апартаменти</h3>
+                    <p>Двокімнатний номер з невеликою кухнею для комфортного відпочинку.</p>
+                    <div class="facilities-list">
+                        <span class="facility-pill">Wi-Fi</span>
+                        <span class="facility-pill">Міні-кухня</span>
+                        <span class="facility-pill">Телевізор</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="view-all-container">
+            <a th:href="@{/rooms}" class="cta-secondary">Переглянути всі номери</a>
+        </div>
+
+        <div class="about-grid" style="margin-top: 40px;">
+            <section class="card">
+                <h2>Хто ми?</h2>
+                <p>Edemium — це не просто готель, а сучасна платформа, створена для вашої зручності.
+                    Ми поєднуємо гостинність з технологіями, щоб зробити ваше перебування максимально
+                    комфортним та ефективним.</p>
+                <p>Наша місія — надати гостям повний контроль над своїм відпочинком через
+                    зручний цифровий інтерфейс.</p>
+                <a th:href="@{/about_us}" class="cta" style="margin-top: 10px; display: inline-block;">Дізнатися
+                    більше</a>
+            </section>
+
+            <aside>
+                <div class="card">
+                    <h3 style="margin:0 0 8px">Швидкі посилання</h3>
+                    <ul style="padding-left:18px; margin:0; color:var(--muted); line-height: 1.6;">
+                        <li>Політика конфіденційності</li>
+                        <li>Правила користування</li>
+                        <li>FAQ</li>
+                    </ul>
+                </div>
+
+                <div class="card" style="margin-top:18px">
+                    <h3 style="margin:0 0 10px">Наші контакти</h3>
+                    <p style="margin:6px 0; color: var(--muted); font-size: 15px;"><strong>Адреса:</strong><br>вул.
+                        Прикладівська, 10, Київ</p>
+                    <p style="margin:6px 0; color: var(--muted); font-size: 15px;"><strong>Телефон:</strong><br>+380 44
+                        123 4567</p>
+                </div>
+            </aside>
+        </div>
+    </main>
+    <footer th:replace="~{/common/footer.html :: footer}"></footer>
+    <script th:src="@{/common/js/header.js}"></script>
+</body>
+
+</html>

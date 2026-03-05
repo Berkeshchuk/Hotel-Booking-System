@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<body>
+    <header  th:fragment="header">
+        <nav>
+            <div class="brand">
+                <a th:href="@{/home}">
+                    <div class="logo">E</div>
+                    <div>
+                        <div>Edemium</div>
+                        <div>Цифровий сервіс бронювання</div>
+                    </div>
+                </a>
+            </div>
+            <a th:href="@{/home}">Home</a>
+            <a th:href="@{/services}">Services</a>
+            <a th:href="@{/rooms}">Rooms</a>
+            <a th:href="@{/bookings}">
+                <span sec:authorize="!hasRole('ADMIN')" >My bookings</span>
+                <span sec:authorize="hasRole('ADMIN')" >Bookings</span>
+            </a>
+            <a th:href="@{/about-us}">About us</a>
+            <a class="cta" th:href="@{/rooms}">Забронювати</a>
+            <div class="booking-note-container">
+                <img class="image-booking-note" th:src="@{common/images/booking-note.png}">
+                <a>До оформлення</a>
+            </div>
+            <div>
+                <a id="sign-in-button" sec:authorize="isAnonymous()" th:if="${isAuthPage == null || ! isAuthPage }" th:href="@{/auth}">Sign in</a>
+                <img class="image-profile" sec:authorize="isAuthenticated()" th:src="@{common/images/profile.png}"
+                    alt="">
+                <div sec:authorize="isAuthenticated()" class="profile-options hidden">
+                    <a id="logout-link" th:href="@{/logout}">Log out</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+</body>
+
+</html>

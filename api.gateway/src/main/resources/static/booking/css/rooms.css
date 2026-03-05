@@ -1,0 +1,185 @@
+:root {
+    --accent: #2b7a78;
+    --accent-dark: #1f5f5d;
+    --muted: #6b7280;
+    --bg: #f7fafc;
+    --card: #ffffff;
+    --border: #e6eef0;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    margin: 0;
+    background: var(--bg);
+    color: #111;
+}
+
+main{
+   height: 35pc; 
+}
+
+/* Контейнер для сітки карток (адаптовано для вашого HTML) */
+.room-container2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 18px;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Базові стилі картки */
+.card {
+    background: var(--card);
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(16, 24, 40, 0.04);
+}
+
+/* Стилі для конкретної картки кімнати */
+.room-card {
+    position: relative;
+    padding: 0; /* Прибираємо відступи, щоб картинка була на всю ширину */
+    overflow: hidden;
+    transition: box-shadow 0.2s, transform 0.2s;
+    border: 1px solid var(--border);
+}
+
+.room-card:hover {
+    box-shadow: 0 8px 16px rgba(16, 24, 40, 0.08);
+    transform: translateY(-2px);
+}
+
+/* Контейнер для слайдера */
+.room-image-container {
+    width: 100%;
+    height: 200px;
+    background: #f0f4f6;
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+}
+
+.room-slide-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity 0.5s ease-in-out;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    z-index: 1;
+}
+
+/* Робимо перше зображення видимим за замовчуванням */
+.room-slide-image:first-of-type,
+.room-slide-image.active {
+    opacity: 1;
+    z-index: 2;
+}
+
+/* Кнопки перемикання слайдера */
+.slider-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    background-color: rgba(0, 0, 0, 0.4);
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 1.2em;
+    font-weight: bold;
+    opacity: 0;
+    transition: opacity 0.2s, background-color 0.2s;
+}
+
+.room-card:hover .slider-btn {
+    opacity: 1;
+}
+
+.slider-btn:hover {
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.slider-btn-prev {
+    left: 10px;
+}
+
+.slider-btn-next {
+    right: 10px;
+}
+
+/* Контент картки */
+.room-card-content {
+    padding: 18px;
+}
+
+.room-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 10px;
+}
+
+.room-meta span:last-child {
+    color: var(--muted);
+    font-weight: 500;
+}
+
+.room-card h3 {
+    margin: 0 0 6px 0;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.room-card p {
+    font-size: 14px;
+    margin: 0 0 12px;
+    color: var(--muted);
+    line-height: 1.6;
+    
+    /* Обрізаємо довгий текст (якщо він не поміщається), щоб картки були однакової висоти */
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    word-break: break-all; 
+}
+
+.room-card h4 {
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+    margin: 0 0 8px;
+}
+
+/* Зручності (Pills) */
+.facilities-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.facility-pill {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    padding: 4px 10px;
+    border-radius: 99px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted);
+}
+
+.spacer{
+    margin-top: 112px;
+}

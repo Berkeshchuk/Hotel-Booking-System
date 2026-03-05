@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+    <header th:fragment="header">
+        <nav>
+            <a th:href="@{/home}">Home</a>
+            <a th:href="@{/services}">Services</a>
+            <a th:href="@{/rooms}">Rooms</a>
+            <a th:href="@{/bookings}">Bookings</a>
+            <a th:href="@{/about-us}">About us</a>
+
+            <div>
+                <a id="sign-in-button" th:href="@{/auth}" th:if="${#authorization.expression('isAnonymous()')}">Sign
+                    in</a>
+                <img id="user-profile" sec:authorize="isAuthenticated()" th:src="@{/images/profile.png}" alt="">
+            </div>
+        </nav>
+    </header>
+</body>
+
+</html>

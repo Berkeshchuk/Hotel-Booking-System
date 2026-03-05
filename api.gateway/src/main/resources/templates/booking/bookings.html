@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Title</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' th:href=@{/booking/css/booking-container.css}>
+
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
+</head>
+
+<body>
+    <header th:replace="/common/header.html :: header"></header>
+    <main>
+        <div th:utext="${htmlBookingContaier}"></div>
+    </main>
+    <footer th:replace="/common/footer.html :: footer"></footer>
+    <script th:src="@{/common/js/header.js}"></script>
+</body>
+
+</html>
+
+<!--         <div class="general-booking-container">
+            <table>
+                <thead>
+                    <th>Час бронювання</th>
+                    <th>Гість</th>
+                    <th>Статус</th>
+                    <th>Коментар</th>
+                    <th>Дії</th>
+                </thead>
+                <tbody>
+                    <tr class="general-booking" th:each="generalBooking : ${generalBookings}" th:data-id="${generalBooking.id}">
+                        <td th:text='${generalBooking.orderDateTime;}'></td>
+                        <td th:text='${generalBooking.phoneNumber}'></td>
+                        <td th:text='${generalBooking.status}'></td>
+                        <td>
+                            --
+                            <div class="hidden" th:text='${generalBooking.clientComment}'></div>
+                        </td>
+                        <td>
+                            --
+                            <div class="hidden">
+                                <span>дія один</span>
+                                <span>дія два</span>
+                                <span>дія три</span>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="general-booking-details" th:each="generalBooking : ${generalBookings}" th:data-id="${generalBooking.id}">
+                <div class="booking-units-container">
+                    <div class="booking-unit" th:each="bookingUnit : generalBooking.bookingUnits" th:data-id="${bookingUnit.id}">
+                        <div th:text='"Статус: " + ${bookingUnit.status}'></div>
+                        <div th:text='"Гостей: " + ${bookingUnit.clientCount}'></div>
+                        <div th:text='"Час бронювання: " + ${bookingUnit.orderDateTime;}'></div>
+                        <div th:text='"Час заїзду: " + ${bookingUnit.start}'></div>
+                        <div th:text='"Час виїзду: " + ${bookingUnit.end}'></div>
+                        <div class="service-unit-details" th:data-id="${bookingUnit.serviceUnit.id}">
+                            <img class="service-unit-image" th:src="${bookingUnit.serviceUnit.imageRecords.getFirst()}" th:alt="">
+                            <div th:text="${bookingUnit.serviceUnit.type}"></div>
+                            <div th:text="${bookingUnit.serviceUnit.price}"></div>
+                            <div th:text="${bookingUnit.serviceUnit.guestCapacity}"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> -->

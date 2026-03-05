@@ -1,0 +1,5 @@
+com\common\enums\BookingStatus.class
+com\common\enums\Gender.class
+com\common\dto\AllocationBookingDto.class
+com\common\security\AuthPrincipalDto.class
+com\common\security\AuthPrincipal.class

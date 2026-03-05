@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Page Title</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel="stylesheet" th:href="@{common/css/header.css}">
+    <link rel="stylesheet" th:href="@{booking/css/rooms.css}">
+    <link sec:authorize="hasRole('ADMIN')" rel="stylesheet" th:href="@{booking/css/room-post-form.css}">
+
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
+</head>
+
+<body>
+    <header th:replace="~{/common/header.html :: header}"></header>
+    <main>
+        <div class="spacer"></div>
+        <div class="overlay"></div>
+
+        <div sec:authorize="hasRole('ADMIN')" class="post-form-container hidden">
+            <form id="post-form" th:action="@{/api/rooms}" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="price">Ціна за ніч (₴)</label>
+                    <input type="number" name="price" placeholder="Наприклад: 2500" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="description">Опис кімнати</label>
+                    <textarea class="input-description" name="description"
+                        placeholder="Опишіть особливості кімнати, зручності, вигляд з вікна тощо" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="type">Тип кімнати</label>
+                    <input type="text" name="type" placeholder="Наприклад: Люкс, Стандарт, Сімейна" required>
+                </div>
+                <div class="form-group">
+                    <label for="guestCapacity">Максимальна кількість гостей</label>
+                    <input type="number" name="guestCapacity" placeholder="Наприклад: 2" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label>Зручності</label>
+                    <div class="form-facility-container"></div>
+                </div>
+                <div class="form-group">
+                    <label for="images">Фотографії кімнати</label>
+                    <input class="file-input" type="file" name="post-images" accept="image/*" multiple>
+                </div>
+                <button type="submit">Додати кімнату</button>
+            </form>
+
+            <button id="post-form-closer">Сховати</button>
+        </div>
+        <div sec:authorize="hasRole('ADMIN')" class="put-form hidden">
+            <form th:action="@{/rooms}"></form>
+        </div>
+        <div sec:authorize="hasRole('ADMIN')" class="delete-modal-window hidden">
+            <h3>Are you sure you want to delete the room?</h3>
+            <button>Delete</button>
+            <button>Cancel</button>
+        </div>
+
+        <button sec:authorize="hasRole('ADMIN')" id="post-form-opener">Додати кімнату</button>
+        <div class="room-container1" th:utext="${roomContainer}">
+        </div>
+        <div sec:authorize="hasRole('ADMIN')" class="modal-buttons-container">
+            <button class="edit-modal-opener"></button>
+            <button class="delete-modal-opener"></button>
+        </div>
+
+    </main>
+    <footer th:replace="~{/common/footer.html :: footer}"></footer>
+    <script th:src="@{/common/js/header.js}"></script>
+    <script th:src="@{/booking/js/rooms.js}"></script>
+
+</body>
+
+</html>

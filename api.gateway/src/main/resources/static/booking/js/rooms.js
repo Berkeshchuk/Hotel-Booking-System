@@ -147,7 +147,9 @@ function initializePostFormEvent() {
             }
         })
 
-        const data = await res.json()
+        if(res.ok){
+            window.location.reload()
+        }
     })
 
 

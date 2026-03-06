@@ -30,7 +30,7 @@ public class GatewayRoutingConfig {
 
     @Bean
     public RouterFunction<ServerResponse> bookingRoute() {
-        return buildServiceRoute("/api/booking/**", bookingServiceUrl);
+        return buildServiceRoute("/api/bookings/**", bookingServiceUrl);
     }
 
     @Bean

@@ -1,23 +1,19 @@
 package com.demo_hotel_service.controllers;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.common.security.AuthPrincipal;
 import com.demo_hotel_service.data.dto.RoomUnitDto;
 import com.demo_hotel_service.data.models.hotel_offerings.rooms.RoomUnit;
 import com.demo_hotel_service.services.ServiceUnitService;
@@ -41,7 +37,7 @@ public class RoomController {
 
     
     @PostMapping("/api/rooms")
-    @CrossOrigin(origins = "http://localhost:8085")
+    // @CrossOrigin(origins = "http://localhost:8085")
     public ResponseEntity<?> addRoom(
             @RequestPart("room") RoomUnitDto room,
             @RequestPart(value = "imageFiles", required = false) List<MultipartFile> imageFiles) {

@@ -6,6 +6,7 @@
     <meta charset='utf-8'>
     <link rel="stylesheet" th:href="@{/common/css/header.css}">
     <link rel="stylesheet" th:href="@{/booking/css/home.css}">
+    <link rel="stylesheet" th:href="@{common/css/login-overlay.css}">
     <meta name="_csrf" th:content="${_csrf.token}">
     <meta name="_csrf_header" th:content="${_csrf.headerName}">
 </head>
@@ -101,7 +102,7 @@
             <a th:href="@{/rooms}" class="cta-secondary">Переглянути всі номери</a>
         </div>
 
-        <div class="about-grid" style="margin-top: 40px;">
+        <div class="about-grid">
             <section class="card">
                 <h2>Хто ми?</h2>
                 <p>Edemium — це не просто готель, а сучасна платформа, створена для вашої зручності.
@@ -109,32 +110,34 @@
                     комфортним та ефективним.</p>
                 <p>Наша місія — надати гостям повний контроль над своїм відпочинком через
                     зручний цифровий інтерфейс.</p>
-                <a th:href="@{/about_us}" class="cta" style="margin-top: 10px; display: inline-block;">Дізнатися
+                <a th:href="@{/about_us}" class="cta">Дізнатися
                     більше</a>
             </section>
 
             <aside>
                 <div class="card">
-                    <h3 style="margin:0 0 8px">Швидкі посилання</h3>
-                    <ul style="padding-left:18px; margin:0; color:var(--muted); line-height: 1.6;">
+                    <h3 >Швидкі посилання</h3>
+                    <ul >
                         <li>Політика конфіденційності</li>
                         <li>Правила користування</li>
                         <li>FAQ</li>
                     </ul>
                 </div>
 
-                <div class="card" style="margin-top:18px">
-                    <h3 style="margin:0 0 10px">Наші контакти</h3>
-                    <p style="margin:6px 0; color: var(--muted); font-size: 15px;"><strong>Адреса:</strong><br>вул.
+                <div class="card" >
+                    <h3 >Наші контакти</h3>
+                    <p ><strong>Адреса:</strong><br>вул.
                         Прикладівська, 10, Київ</p>
-                    <p style="margin:6px 0; color: var(--muted); font-size: 15px;"><strong>Телефон:</strong><br>+380 44
+                    <p ><strong>Телефон:</strong><br>+380 44
                         123 4567</p>
                 </div>
             </aside>
         </div>
     </main>
     <footer th:replace="~{/common/footer.html :: footer}"></footer>
+  <div th:replace="~{/common/login-overlay.html :: login-overlay}"></div>
     <script th:src="@{/common/js/header.js}"></script>
+    <script sec:authorize="! isAuthenticated()" th:src="@{/common/js/login-overlay.js}"></script>
 </body>
 
 </html>

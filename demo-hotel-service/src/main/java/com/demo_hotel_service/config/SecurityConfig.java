@@ -7,8 +7,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import org.springframework.security.config.Customizer;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import lombok.AllArgsConstructor;
 
@@ -27,6 +26,13 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
             .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/bookings").authenticated()
+                .requestMatchers("/api/bookings").authenticated()
+                .requestMatchers(
+                    new AntPathRequestMatcher("/api/rooms", "POST"),
+                    new AntPathRequestMatcher("/api/rooms", "PUT"),
+                    new AntPathRequestMatcher("/api/rooms", "DELETE")
+                ).hasRole("ADMIN")
                 .anyRequest().permitAll()
             )
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

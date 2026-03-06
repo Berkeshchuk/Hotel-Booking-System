@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -17,15 +18,18 @@ import org.springframework.security.web.authentication.rememberme.JdbcTokenRepos
 import org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
+
 @Configuration
 @EnableRedisHttpSession(maxInactiveIntervalInSeconds = 60)
-@RequiredArgsConstructor
+@EnableMethodSecurity
 public class SecurityConfig {
 
     private final CustomUserDetailsService userDetailsService;
@@ -50,14 +54,19 @@ public class SecurityConfig {
                         object-src 'none';
                         base-uri 'none';
                         frame-ancestors 'none';
-                        connect-src 'self' http://localhost:8087/api/rooms;
+                        connect-src 'self' http://localhost:8087;
                     """.replace("\n", " "))
                 )
             )
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/bookings").authenticated()
                 .requestMatchers("/bookings-cart").authenticated()
                 .requestMatchers("/bookings-submit").authenticated()
+                .requestMatchers("/api/bookings").authenticated()
+                .requestMatchers(
+                    new AntPathRequestMatcher("/api/rooms", "POST"),
+                    new AntPathRequestMatcher("/api/rooms", "PUT"),
+                    new AntPathRequestMatcher("/api/rooms", "DELETE")
+                ).hasRole("ADMIN")
                 .anyRequest().permitAll()
             )
             .httpBasic(basic -> basic.disable())

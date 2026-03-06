@@ -8,6 +8,7 @@
 
     <link rel="stylesheet" th:href="@{common/css/header.css}">
     <link rel="stylesheet" th:href="@{common/css/about-us.css}">
+    <link rel="stylesheet" th:href="@{common/css/login-overlay.css}">
     <meta name="_csrf" th:content="${_csrf.token}">
     <meta name="_csrf_header" th:content="${_csrf.headerName}">
 </head>
@@ -81,8 +82,11 @@
     </main>
 
     <footer th:replace="~{/common/footer.html :: footer}"></footer>
+    <div th:replace="~{/common/login-overlay.html :: login-overlay}"></div>
+
     <script th:src="@{/common/js/about-us.js}"></script>
     <script th:src="@{/common/js/header.js}"></script>
+    <script sec:authorize="! isAuthenticated()"  th:src="@{/common/js/login-overlay.js}"></script>
 </body>
 
 </html>

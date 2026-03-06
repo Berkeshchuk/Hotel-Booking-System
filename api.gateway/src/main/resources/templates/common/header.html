@@ -16,16 +16,17 @@
             <a th:href="@{/home}">Home</a>
             <a th:href="@{/services}">Services</a>
             <a th:href="@{/rooms}">Rooms</a>
-            <a th:href="@{/bookings}">
+            <a id="booking-page-link" th:href="@{/bookings}">
                 <span sec:authorize="!hasRole('ADMIN')" >My bookings</span>
                 <span sec:authorize="hasRole('ADMIN')" >Bookings</span>
             </a>
             <a th:href="@{/about-us}">About us</a>
             <a class="cta" th:href="@{/rooms}">Забронювати</a>
-            <div class="booking-note-container">
+            <div class="booking-note-container" th:data-href="@{/bookings-cart}">
                 <img class="image-booking-note" th:src="@{common/images/booking-note.png}">
                 <a>До оформлення</a>
             </div>
+            <div id="authorized" th:data-auth="${#authorization.expression('isAuthenticated()')}"></div>
             <div>
                 <a id="sign-in-button" sec:authorize="isAnonymous()" th:if="${isAuthPage == null || ! isAuthPage }" th:href="@{/auth}">Sign in</a>
                 <img class="image-profile" sec:authorize="isAuthenticated()" th:src="@{common/images/profile.png}"

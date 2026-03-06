@@ -6,13 +6,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.client.RestClient;
-import org.springframework.web.client.RestClient.ResponseSpec;
 
+import com.api.gateway.config.security.JwtUtil;
 import com.common.security.AuthPrincipal;
 
+import lombok.RequiredArgsConstructor;
+
 @Controller
+@RequiredArgsConstructor
 public class ApiGatewayController {
-    private RestClient restClient = RestClient.create();
+    private final RestClient restClient = RestClient.create();
+    private final JwtUtil jwtUtil;
 
     @Value("${booking_service_url}")
     private String bookingServiceUrl;
@@ -23,15 +27,26 @@ public class ApiGatewayController {
     }
 
     @GetMapping("/bookings")
-    public String bookings(Model model) {
+    public String bookings(Model model, @AuthenticationPrincipal AuthPrincipal userDetails) {
 
-        String htmlBookingContaier =
-                restClient.get()
+        // Якщо користувач не авторизований - не виконуємо запит до мікросервісу
+        // бронювання, а вказуємо про потребу авторизуватися
+        if (userDetails == null) {
+            model.addAttribute("showLoginOverlay", true);
+            return "/booking/bookings.html";
+        }
+
+        String htmlBookingContaier = restClient.get()
                 .uri(bookingServiceUrl + "/bookings")
+                .header("Authorization", "Bearer " + jwtUtil.generateUserToken(
+                        userDetails.getId(),
+                        userDetails.getLogin(),
+                        userDetails.getRole()))
                 .retrieve()
                 .body(String.class);
 
         model.addAttribute("htmlBookingContaier", htmlBookingContaier);
+        model.addAttribute("showLoginOverlay", false);
 
         return "/booking/bookings.html";
     }
@@ -52,13 +67,24 @@ public class ApiGatewayController {
     }
 
     @GetMapping("/rooms")
-    public String rooms(Model model){
+    public String rooms(Model model, @AuthenticationPrincipal AuthPrincipal userDetails) {
 
-        String roomContainer =
-                restClient.get()
-                .uri(bookingServiceUrl + "/rooms")
-                .retrieve()
-                .body(String.class);
+        String roomContainer = "";
+        if (userDetails == null) {
+            roomContainer = restClient.get()
+                    .uri(bookingServiceUrl + "/rooms")
+                    .retrieve()
+                    .body(String.class);
+        } else {
+            roomContainer = restClient.get()
+                    .uri(bookingServiceUrl + "/rooms")
+                    .header("Authorization", "Bearer " + jwtUtil.generateUserToken(
+                        userDetails.getId(),
+                        userDetails.getLogin(),
+                        userDetails.getRole()))
+                    .retrieve()
+                    .body(String.class);
+        }
 
         model.addAttribute("roomContainer", roomContainer);
 

@@ -14,62 +14,55 @@ document.querySelector('.login-link').addEventListener('click', () => {
 });
 
 
-const signInForm = document.getElementById("sign-in-form")
+// 1. Створюємо універсальну функцію для обох форм
+function handleAuthSubmit(formId, endpoint, onSuccess) {
+    const form = document.getElementById(formId);
+    if (!form) return;
 
-signInForm.addEventListener("submit", async (event) => {
-    event.preventDefault()
+    form.addEventListener("submit", async (event) => {
+        event.preventDefault();
 
-    const errorSpan = signInForm.querySelector(".error-span");
-    errorSpan.textContent = ""
-    const tokenHeader = document.querySelector('meta[name="_csrf"]').content;
-    const token = document.querySelector('meta[name="_csrf_header"]').content;
+        // Знаходимо і чистимо поле з помилкою
+        const errorSpan = form.querySelector(".error-span");
+        errorSpan.textContent = "";
 
-    const formData = new FormData(signInForm)
+        // Отримуємо CSRF токени
+        const tokenHeader = document.querySelector('meta[name="_csrf_header"]').content;
+        const token = document.querySelector('meta[name="_csrf"]').content;
 
-    const res = await fetch("/sign_in", {
-        method: "POST",
-        body: formData,
-        headers: {
-            [tokenHeader]: token
+        // ВАЖЛИВО: Правильно конвертуємо форму в x-www-form-urlencoded
+        const urlEncodedData = new URLSearchParams(new FormData(form));
+
+        try {
+            // Відправляємо універсальний запит
+            const res = await fetch(endpoint, {
+                method: "POST",
+                body: urlEncodedData,
+                headers: { [tokenHeader]: token }
+            });
+
+            const data = await res.json();
+
+            // Викликаємо унікальну логіку (callback) або показуємо помилку
+            if (res.ok) {
+                onSuccess(data);
+            } else {
+                errorSpan.textContent = data.error || "Невідома помилка";
+            }
+        } catch (error) {
+            errorSpan.textContent = "Помилка з'єднання з сервером";
         }
-    })
+    });
+}
 
-    if (res.ok) {
-        const data = await res.json()
-        window.location.href = data.redirect
-        // alert(data.redirect)
-    } else {
-        const data = await res.json()
-        errorSpan.textContent = data.error
-    }
-})
+// 2. Застосовуємо функцію для форми ВХОДУ
+handleAuthSubmit("sign-in-form", "/sign_in", (data) => {
+    window.location.href = data.redirect;
+});
 
-const signUpForm = document.getElementById("sign-up-form")
-signUpForm.addEventListener("submit", async (event) => {
-    event.preventDefault()
-
-    const errorSpan = signUpForm.querySelector(".error-span")
-    errorSpan.textContent = ""
-    const tokenHeader = document.querySelector('meta[name="_csrf_header"]').content
-    const token = document.querySelector('meta[name="_csrf"]').content
-
-    const formData = new FormData(signUpForm)
-
-
-
-    const res = await fetch("/sign_up", {
-        method: "POST",
-        body: formData,
-        headers: {
-            [tokenHeader]: token
-        }
-    })
-
-    if (res.ok) {
-        signUpFormContainer.classList.remove('active');
-        setTimeout(() => signInFormContainer.classList.add('active'), 100);
-    } else {
-        const data = await res.json()
-        errorSpan.textContent = data.error
-    }
-})
+// 3. Застосовуємо функцію для форми РЕЄСТРАЦІЇ
+handleAuthSubmit("sign-up-form", "/sign_up", () => {
+    // Припускаємо, що ці змінні (контейнери) оголошені вище у вашому файлі
+    signUpFormContainer.classList.remove('active');
+    setTimeout(() => signInFormContainer.classList.add('active'), 100);
+});

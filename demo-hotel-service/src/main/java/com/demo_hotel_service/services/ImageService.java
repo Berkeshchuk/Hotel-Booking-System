@@ -94,10 +94,11 @@ public class ImageService {
 
 
     @Transactional
-    public void removeImage(Long imageId, String imageUrl) throws IOException {
+    public Boolean removeImage(Long imageId, String imageUrl) {
         if (imageId == null || imageUrl == null || imageUrl.isBlank()) {
             throw new IllegalArgumentException("Params cant be null or empty");
         }
+
         imageRepository.deleteById(imageId);
 
         TransactionSynchronizationManager.registerSynchronization(
@@ -112,6 +113,8 @@ public class ImageService {
                 }
             }
         );
+
+        return imageRepository.existsById(imageId);
     }
 
     @Transactional

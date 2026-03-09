@@ -72,6 +72,7 @@ public abstract class BookingUnitMapper {
         return entity;
     }
 
+    @SuppressWarnings("unchecked")
     private <E extends BookingUnit, D extends BookingUnitDto> PolymorphicUpdateBookingMapper<E, D> castMapper(
             PolymorphicUpdateBookingMapper<?, ?> mapper) {
         return (PolymorphicUpdateBookingMapper<E, D>) mapper;

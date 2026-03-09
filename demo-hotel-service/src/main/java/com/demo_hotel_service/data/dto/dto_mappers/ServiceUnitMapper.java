@@ -97,6 +97,7 @@ public abstract class ServiceUnitMapper {
         return entity;
     }
 
+    @SuppressWarnings("unchecked")
     private <E extends ServiceUnit, D extends ServiceUnitDto> PolymorphicUpdateServiceUnitMapper<E, D> castMapper(
             PolymorphicUpdateServiceUnitMapper<?, ?> mapper) {
         return (PolymorphicUpdateServiceUnitMapper<E, D>) mapper;

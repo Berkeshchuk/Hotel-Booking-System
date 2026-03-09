@@ -37,6 +37,10 @@ public class GatewayRoutingConfig {
     public RouterFunction<ServerResponse> roomRoute() {
         return buildServiceRoute("/api/rooms/**", bookingServiceUrl);
     }
+    @Bean
+    public RouterFunction<ServerResponse> imageRoute() {
+        return buildServiceRoute("/api/images/**", bookingServiceUrl);
+    }
 
     @Bean
     public RouterFunction<ServerResponse> uploadsRoute() {

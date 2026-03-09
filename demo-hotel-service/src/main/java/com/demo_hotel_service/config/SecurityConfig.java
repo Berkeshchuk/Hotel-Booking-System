@@ -31,7 +31,8 @@ public class SecurityConfig {
                 .requestMatchers(
                     new AntPathRequestMatcher("/api/rooms", "POST"),
                     new AntPathRequestMatcher("/api/rooms", "PUT"),
-                    new AntPathRequestMatcher("/api/rooms", "DELETE")
+                    new AntPathRequestMatcher("/api/rooms", "DELETE"),
+                     new AntPathRequestMatcher("/api/images", "DELETE")
                 ).hasRole("ADMIN")
                 .anyRequest().permitAll()
             )

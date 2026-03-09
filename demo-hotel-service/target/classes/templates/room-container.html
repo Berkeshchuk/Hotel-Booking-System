@@ -7,7 +7,7 @@
                 aria-label="Previous image">&lt;</button>
             <button class="slider-btn slider-btn-next" th:if="${room.imageRecords.size() > 1}"
                 aria-label="Next image">&gt;</button>
-            <img class="room-slide-image" th:if="${room.imageRecords.size() == 0}" src="" alt="Фото відсутнє">
+            <img class="room-slide-image" th:if="${room.imageRecords.size() == 0}" src="" alt="">
         </div>
 
         <div class="room-card-content">
@@ -19,7 +19,7 @@
             <p th:text="${room.description}"></p>
             <h4>Зручності:</h4>
             <div class="facilities-list">
-                <span class="facility-pill" th:each="facility : ${room.facilities}" th:text="${facility}"></span>
+                <span class="room-facility-tag" th:each="facility : ${room.facilities}" th:text="${facility}"></span>
             </div>
         </div>
         <div sec:authorize="hasRole('ADMIN')" class="modal-buttons-container">

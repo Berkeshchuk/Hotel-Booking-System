@@ -16,13 +16,43 @@ body {
     margin: 0;
     background: var(--bg);
     color: #111;
+
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
-main{
-   height: 35pc; 
+main {
+    flex: 1;
 }
 
-/* Контейнер для сітки карток (адаптовано для вашого HTML) */
+.fixed-add-room-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    background-color: var(--accent);
+    color: white;
+    border: none;
+    padding: 14px 20px;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.2s, transform 0.1s, box-shadow 0.2s;
+}
+
+.fixed-add-room-btn:hover {
+    background-color: var(--accent-dark);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+    transform: translateY(-2px);
+}
+
+.fixed-add-room-btn:active {
+    transform: translateY(1px);
+}
+
 .room-container2 {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -32,28 +62,28 @@ main{
     padding: 0 20px;
 }
 
-/* Базові стилі картки */
 .card {
     background: var(--card);
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(16, 24, 40, 0.04);
 }
 
-/* Стилі для конкретної картки кімнати */
 .room-card {
     position: relative;
-    padding: 0; /* Прибираємо відступи, щоб картинка була на всю ширину */
+    padding: 0;
     overflow: hidden;
-    transition: box-shadow 0.2s, transform 0.2s;
+    transition: transform 0.2s, box-shadow 0.2s;
+    will-change: transform, box-shadow;
+    backface-visibility: hidden;
     border: 1px solid var(--border);
 }
 
+
 .room-card:hover {
     box-shadow: 0 8px 16px rgba(16, 24, 40, 0.08);
-    transform: translateY(-2px);
+    transform: translate3d(0, -2px, 0);
 }
 
-/* Контейнер для слайдера */
 .room-image-container {
     width: 100%;
     height: 200px;
@@ -75,14 +105,22 @@ main{
     z-index: 1;
 }
 
-/* Робимо перше зображення видимим за замовчуванням */
-.room-slide-image:first-of-type,
+/* ПРАВИЛО №1: Показуємо перше фото за замовчуванням (щоб не було дірок до завантаження JS).
+    використовуємо спеціальний клас-маркер .js-loaded, який ми додамо на контейнер через JS.
+   Як тільки JS завантажиться, це правило перестане діяти!
+*/
+.room-image-container:not(.js-loaded) .room-slide-image:first-of-type {
+    opacity: 1;
+    z-index: 2;
+}
+
+/* ПРАВИЛО №2: Головне правило для JS. Активне фото завжди видиме.
+*/
 .room-slide-image.active {
     opacity: 1;
     z-index: 2;
 }
 
-/* Кнопки перемикання слайдера */
 .slider-btn {
     position: absolute;
     top: 50%;
@@ -116,7 +154,6 @@ main{
     right: 10px;
 }
 
-/* Контент картки */
 .room-card-content {
     padding: 18px;
 }
@@ -147,13 +184,13 @@ main{
     margin: 0 0 12px;
     color: var(--muted);
     line-height: 1.6;
-    
-    /* Обрізаємо довгий текст (якщо він не поміщається), щоб картки були однакової висоти */
+
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    word-break: break-all; 
+    word-break: break-all;
+    line-clamp: 3;
 }
 
 .room-card h4 {
@@ -163,14 +200,13 @@ main{
     margin: 0 0 8px;
 }
 
-/* Зручності (Pills) */
 .facilities-list {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
 }
 
-.facility-pill {
+.room-facility-tag {
     background: var(--bg);
     border: 1px solid var(--border);
     padding: 4px 10px;
@@ -180,6 +216,58 @@ main{
     color: var(--muted);
 }
 
-.spacer{
+.spacer {
     margin-top: 112px;
+}
+
+
+
+
+.modal-buttons-container {
+    border-top: 1px solid var(--border);
+    padding: 12px 18px;
+    background: var(--bg);
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 16px;
+}
+
+.edit-modal-opener,
+.delete-modal-opener {
+    border: 1px solid var(--border);
+    background: #fff;
+    color: var(--muted);
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.delete-modal-opener {
+    color: var(--danger);
+}
+
+.edit-modal-opener:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: #f0f9f9;
+}
+
+.delete-modal-opener:hover {
+    background: #edcdcd;
+    border-color: var(--danger);
+}
+
+.rooms-loader {
+    text-align: center;
+    padding: 20px;
+    font-size: 18px;
+    display: none;
+}
+
+.rooms-loader.show {
+    display: block;
 }

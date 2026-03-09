@@ -1,4 +1,4 @@
-/* header.css */
+
 :root {
     --accent: #2b7a78;
     --accent-dark: #22605e;
@@ -25,7 +25,6 @@ header.header-hidden {
     transform: translateY(-100%);
 }
 
-/* Робимо nav гнучким контейнером */
 header nav {
     max-width: 1200px;
     margin: 0 auto;
@@ -34,7 +33,6 @@ header nav {
     gap: 20px;
 }
 
-/* Блок з логотипом. margin-right: auto відштовхує всі посилання вправо */
 header .brand {
     margin-right: auto;
 }
@@ -69,7 +67,6 @@ header .brand div>div:last-child {
     color: var(--muted);
 }
 
-/* Звичайні посилання (Home, Services тощо) */
 header nav a:not(.cta) {
     font-size: 14px;
     color: var(--muted);
@@ -118,11 +115,6 @@ header nav a:not(.cta) span:hover {
 
 
 
-/* .image-booking-note:hover {
-    opacity: 0.75;
-} */
-
-/* Кнопка "Забронювати" */
 header nav>a.cta {
     padding: 8px 16px;
     border-radius: 8px;
@@ -140,7 +132,6 @@ header nav>a.cta:hover {
     background: var(--accent-dark);
 }
 
-/* Блок авторизації (останній div всередині nav) */
 header nav>div:last-child {
     display: flex;
     align-items: center;
@@ -178,7 +169,6 @@ header nav>div:last-child {
     display: none !important;
 }
 
-/* Випадаюче меню профілю (якщо ви вирішите його стилізувати) */
 .profile-options {
     position: absolute;
     top: 50px;

@@ -1,21 +1,19 @@
-
 #login-overlay.modal {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(15, 23, 42, 0.6); /* Напівпрозорий темний фон */
-    backdrop-filter: blur(4px); /* Сучасний ефект розмиття заднього фону */
+    background-color: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(4px);
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1000; /* Має бути більше ніж у header (там z-index: 50) */
+    z-index: 1000;
     opacity: 1;
     transition: opacity 0.3s ease;
 }
 
-/* 2. Сама біла картка модального вікна */
 #login-overlay.modal > div {
     background: var(--card, #ffffff);
     padding: 32px 24px;
@@ -26,12 +24,11 @@
     text-align: center;
     display: flex;
     flex-direction: column;
-    gap: 12px; /* Відстань між елементами всередині */
+    gap: 12px;
     transform: translateY(0);
     transition: transform 0.3s ease;
 }
 
-/* 3. Заголовок модалки */
 #login-overlay.modal h2 {
     margin: 0 0 12px 0;
     font-size: 20px;
@@ -40,7 +37,6 @@
     line-height: 1.4;
 }
 
-/* 4. Загальні стилі для обох кнопок */
 #login-overlay.modal a {
     display: flex;
     align-items: center;
@@ -55,7 +51,6 @@
     box-sizing: border-box;
 }
 
-/* 5. Головна кнопка (Авторизуватися) */
 #login-overlay.modal a[href*="/auth"] {
     background: var(--accent);
     color: white;
@@ -67,7 +62,6 @@
     transform: translateY(-1px);
 }
 
-/* 6. Другорядна кнопка (На головну) */
 #login-overlay.modal a[href*="/home"] {
     background: white;
     color: var(--muted);
@@ -81,12 +75,11 @@
     background: #f8fafc;
 }
 
-/* Правило для приховування модалки (працює разом з вашим класом .hidden) */
 #login-overlay.modal.hidden {
     opacity: 0;
-    pointer-events: none; /* Щоб не можна було клікнути на невидиме вікно */
+    pointer-events: none;
 }
 
 #login-overlay.modal.hidden > div {
-    transform: translateY(-20px); /* Ефект легкого виїзду зверху при появі */
+    transform: translateY(-20px);
 }

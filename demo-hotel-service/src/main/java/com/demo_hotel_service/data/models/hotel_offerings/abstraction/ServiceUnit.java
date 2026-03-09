@@ -53,10 +53,10 @@ public class ServiceUnit {
     private String type;
 
     @Column(nullable = false)
-    private boolean hiddenFromClient;
+    private boolean hiddenFromClient = true; //приховано для майбутніх бронювань, поточні обслуговуються далі
 
     @Column(nullable = false)
-    private boolean outOfService;
+    private boolean outOfService = true; //послугу неможливо фізично надати(поломка, форс-мажор, послуга - застаріла) на невизначений час
 
     @Column(nullable = false)
     private int guestCapacity;

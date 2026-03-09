@@ -10,8 +10,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
 public class WorkerSchedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +25,7 @@ public class WorkerSchedule {
     @JoinColumn(name = "worker_id")
     private SpaWorker worker;
 
-    private LocalDate date; // Конкретна дата зміни
-    private LocalDateTime startTime; // Початок зміни (наприклад, 2025-05-12 09:00)
-    private LocalDateTime endTime;   // Кінець зміни (наприклад, 2025-05-12 18:00)
+    private LocalDate date;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime; 
 }

@@ -3,6 +3,8 @@ package com.demo_resource_service.data.models;
 import java.util.List;
 import java.util.Set;
 
+import com.common.enums.Gender;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -22,28 +24,23 @@ public class SpaWorker {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Базова інформація (для відображення адміністратору)
     @Column(nullable = false)
     private String firstName;
-    
+
     @Column(nullable = false)
     private String lastName;
 
-    // Важливо для СПА: деякі клієнти просять майстра певної статі
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Gender gender;
 
-    // Статус ресурсу (щоб алгоритм знав, чи можна його бронювати)
-    // Наприклад: ACTIVE, SICK_LEAVE, VACATION, FIRED
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private WorkerStatus status;
 
     @OneToMany(mappedBy = "worker", cascade = CascadeType.ALL)
     private List<WorkerSchedule> workSchedules;
-    
-    // === КОНТАКТИ (для Адміністратора) ===
+
     @Column(nullable = false)
     private String phoneNumber;
 
@@ -51,7 +48,6 @@ public class SpaWorker {
     private Set<Long> competentSpaUnitIds;
 
 }
-
 
 enum WorkerStatus {
     ACTIVE,

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-03-09T13:29:11+0200",
+    date = "2026-03-11T17:15:34+0200",
     comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.45.0.v20260224-0835, environment: Java 21.0.4 (Oracle Corporation)"
 )
 @Component
@@ -30,7 +30,6 @@ public class BookingSpaUnitMapperImpl implements BookingSpaUnitMapper {
         }
         entity.setEnd( dto.getEnd() );
         entity.setOrderDateTime( dto.getOrderDateTime() );
-        entity.setServiceUnit( serviceUnitMapper.toPolymorphicEntity( dto.getServiceUnit() ) );
         entity.setServiceUnitId( dto.getServiceUnitId() );
         entity.setStart( dto.getStart() );
         entity.setStatus( dto.getStatus() );

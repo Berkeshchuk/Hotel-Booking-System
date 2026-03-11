@@ -7,10 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClient.ResponseSpec;
 
-// import com.demo_user_service.data.enums.AccountState;
-// import com.demo_user_service.data.models.User;
-// import com.demo_user_service.repositories.UserRepository;
-
 import com.common.security.AuthPrincipal;
 import com.common.security.AuthPrincipalDto;
 

@@ -19,7 +19,6 @@ com\demo_hotel_service\services\ServiceUnitService.class
 com\demo_hotel_service\data\dto\BookingSpaUnitDto.class
 com\demo_hotel_service\data\dto\GeneralBookingDto.class
 com\demo_hotel_service\data\dto\BookingRoomUnitDto.class
-com\demo_hotel_service\controllers\MyController.class
 com\demo_hotel_service\config\JwtFilter.class
 com\demo_hotel_service\data\dto\dto_mappers\BookingUnitMapperImpl.class
 com\demo_hotel_service\data\models\images\ImageRecord.class
@@ -31,6 +30,7 @@ com\demo_hotel_service\data\models\bookings\BookingUnit.class
 com\demo_hotel_service\data\dto\dto_mappers\polymorphic\PolymorphicUpdateServiceUnitMapper.class
 com\demo_hotel_service\data\dto\SpaUnitDto.class
 com\demo_hotel_service\services\BookingUnitService.class
+com\demo_hotel_service\controllers\ImageController.class
 com\demo_hotel_service\data\dto\dto_mappers\RoomUnitMapper.class
 com\demo_hotel_service\data\dto\dto_mappers\RoomUnitMapperImpl.class
 com\demo_hotel_service\data\dto\dto_mappers\SpaUnitMapper.class

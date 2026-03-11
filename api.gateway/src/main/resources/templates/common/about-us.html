@@ -14,7 +14,7 @@
 </head>
 
 <body>
-    <header th:replace="~{/common/header.html :: header}"></header>
+    <header th:replace="~{common/header.html :: header}"></header>
 
     <main>
         <div class="container">
@@ -71,9 +71,9 @@
                     <div class="card" style="margin-top:12px">
                         <h3 style="margin:0 0 8px">Швидкі посилання</h3>
                         <ul class="quick-links">
-                            <li><a th:href="@{/privacy}">Політика конфіденційності</a></li>
-                            <li><a th:href="@{/terms}">Правила користування</a></li>
-                            <li><a th:href="@{/faq}">FAQ</a></li>
+                            <li><a th:href="@{privacy}">Політика конфіденційності</a></li>
+                            <li><a th:href="@{terms}">Правила користування</a></li>
+                            <li><a th:href="@{faq}">FAQ</a></li>
                         </ul>
                     </div>
                 </aside>
@@ -81,12 +81,12 @@
         </div>
     </main>
 
-    <footer th:replace="~{/common/footer.html :: footer}"></footer>
-    <div th:replace="~{/common/login-overlay.html :: login-overlay}"></div>
+    <footer th:replace="~{common/footer.html :: footer}"></footer>
+    <div th:replace="~{common/login-overlay.html :: login-overlay}"></div>
 
-    <script th:src="@{/common/js/about-us.js}"></script>
-    <script th:src="@{/common/js/header.js}"></script>
-    <script sec:authorize="! isAuthenticated()"  th:src="@{/common/js/login-overlay.js}"></script>
+    <script th:src="@{common/js/about-us.js}"></script>
+    <script th:src="@{common/js/header.js}"></script>
+    <script sec:authorize="! isAuthenticated()"  th:src="@{common/js/login-overlay.js}"></script>
 </body>
 
 </html>

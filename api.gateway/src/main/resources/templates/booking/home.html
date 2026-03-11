@@ -4,21 +4,21 @@
 <head>
     <title>Edemium</title>
     <meta charset='utf-8'>
-    <link rel="stylesheet" th:href="@{/common/css/header.css}">
-    <link rel="stylesheet" th:href="@{/booking/css/home.css}">
+    <link rel="stylesheet" th:href="@{common/css/header.css}">
+    <link rel="stylesheet" th:href="@{booking/css/home.css}">
     <link rel="stylesheet" th:href="@{common/css/login-overlay.css}">
     <meta name="_csrf" th:content="${_csrf.token}">
     <meta name="_csrf_header" th:content="${_csrf.headerName}">
 </head>
 
 <body>
-    <header th:replace="~{/common/header.html :: header}"></header>
+    <header th:replace="~{common/header.html :: header}"></header>
     <main class="container">
         <section class="hero-card">
             <h1>Вітаємо в Edemium</h1>
             <p>Ваш комфорт — наша турбота. Знайдіть та забронюйте ідеальний номер за лічені хвилини за допомогою
                 нашого цифрового сервісу.</p>
-            <a th:href="@{/rooms}" class="cta">Переглянути номери</a>
+            <a th:href="@{rooms}" class="cta">Переглянути номери</a>
         </section>
 
         <h2 class="section-title">Чому Edemium?</h2>
@@ -99,7 +99,7 @@
         </div>
 
         <div class="view-all-container">
-            <a th:href="@{/rooms}" class="cta-secondary">Переглянути всі номери</a>
+            <a th:href="@{rooms}" class="cta-secondary">Переглянути всі номери</a>
         </div>
 
         <div class="about-grid">
@@ -110,7 +110,7 @@
                     комфортним та ефективним.</p>
                 <p>Наша місія — надати гостям повний контроль над своїм відпочинком через
                     зручний цифровий інтерфейс.</p>
-                <a th:href="@{/about_us}" class="cta">Дізнатися
+                <a th:href="@{about_us}" class="cta">Дізнатися
                     більше</a>
             </section>
 
@@ -134,11 +134,11 @@
             </aside>
         </div>
     </main>
-    <footer th:replace="~{/common/footer.html :: footer}"></footer>
-    <div th:replace="~{/common/login-overlay.html :: login-overlay}"></div>
+    <footer th:replace="~{common/footer.html :: footer}"></footer>
+    <div th:replace="~{common/login-overlay.html :: login-overlay}"></div>
     
-    <script th:src="@{/common/js/header.js}"></script>
-    <script sec:authorize="! isAuthenticated()" th:src="@{/common/js/login-overlay.js}"></script>
+    <script th:src="@{common/js/header.js}"></script>
+    <script sec:authorize="! isAuthenticated()" th:src="@{common/js/login-overlay.js}"></script>
 </body>
 
 </html>

@@ -27,6 +27,8 @@ public class GatewayRoutingConfig {
     private final JwtUtil jwtUtil;
     @Value("${booking_service_url}")
     private String bookingServiceUrl;
+    @Value("${user_service_url}")
+    private String userServiceUrl;
 
     @Bean
     public RouterFunction<ServerResponse> bookingRoute() {
@@ -45,6 +47,10 @@ public class GatewayRoutingConfig {
     @Bean
     public RouterFunction<ServerResponse> uploadsRoute() {
         return buildPublicServiceRoute("/uploads/**", bookingServiceUrl);
+    }
+    @Bean
+    public RouterFunction<ServerResponse> signUpRoute() {
+        return buildPublicServiceRoute("/sign_up**", userServiceUrl);
     }
     
     private RouterFunction<ServerResponse> buildServiceRoute(String pattern, String targetUrl) {

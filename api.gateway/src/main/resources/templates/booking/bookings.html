@@ -6,7 +6,7 @@
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
     <title>Title</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <link rel='stylesheet' type='text/css' th:href=@{/common/css/header.css}>
+    <link rel='stylesheet' type='text/css' th:href=@{common/css/header.css}>
      <link rel="stylesheet" th:href="@{common/css/login-overlay.css}">
 
     <meta name="_csrf" th:content="${_csrf.token}">
@@ -14,14 +14,14 @@
 </head>
 
 <body>
-    <header th:replace="~{/common/header.html :: header}"></header>
+    <header th:replace="~{common/header.html :: header}"></header>
     <main>
         <div th:utext="${htmlBookingContaier}"></div>
     </main>
-    <footer th:replace="~{/common/footer.html :: footer}"></footer>
- <div th:replace="~{/common/login-overlay.html :: login-overlay}"></div>
+    <footer th:replace="~{common/footer.html :: footer}"></footer>
+ <div th:replace="~{common/login-overlay.html :: login-overlay}"></div>
 
- <script th:src="@{/common/js/header.js}"></script>
+ <script th:src="@{common/js/header.js}"></script>
  
 </body>
 

@@ -34,18 +34,26 @@ function handleAuthSubmit(formId, endpoint, onSuccess) {
             const res = await fetch(endpoint, {
                 method: "POST",
                 body: urlEncodedData,
-                headers: { [tokenHeader]: token }
+                headers: {
+                    [tokenHeader]: token,
+                    "Content-Type": "application/x-www-form-urlencoded"
+                }
             });
 
-            const data = await res.json();
-
             if (res.ok) {
+                let data = {};
+                if (res.status !== 204 && res.headers.get("content-length") !== "0") {
+                    const text = await res.text();
+                    data = text ? JSON.parse(text) : {};
+                }
                 onSuccess(data);
             } else {
-                errorSpan.textContent = data.error || "Невідома помилка";
+                const errorData = await res.json().catch(() => ({}));
+                errorSpan.textContent = errorData.error || "Помилка сервера: " + res.status;
             }
         } catch (error) {
-            errorSpan.textContent = "Помилка з'єднання з сервером";
+            console.error(error);
+            errorSpan.textContent = "Помилка з'єднання або обробки даних";
         }
     });
 }

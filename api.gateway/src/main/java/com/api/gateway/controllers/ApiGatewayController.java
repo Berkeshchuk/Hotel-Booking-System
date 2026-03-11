@@ -23,7 +23,7 @@ public class ApiGatewayController {
 
     @GetMapping("/home")
     public String home() {
-        return "/booking/home.html";
+        return "booking/home.html";
     }
 
     @GetMapping("/bookings")
@@ -33,7 +33,7 @@ public class ApiGatewayController {
         // бронювання, а вказуємо про потребу авторизуватися
         if (userDetails == null) {
             model.addAttribute("showLoginOverlay", true);
-            return "/booking/bookings.html";
+            return "booking/bookings.html";
         }
 
         String htmlBookingContaier = restClient.get()
@@ -48,7 +48,7 @@ public class ApiGatewayController {
         model.addAttribute("htmlBookingContaier", htmlBookingContaier);
         model.addAttribute("showLoginOverlay", false);
 
-        return "/booking/bookings.html";
+        return "booking/bookings.html";
     }
 
     @GetMapping("/auth")
@@ -58,12 +58,12 @@ public class ApiGatewayController {
             return "redirect:" + "/home";
         }
         model.addAttribute("isAuthPage", true);
-        return "/auth/auth.html";
+        return "auth/auth.html";
     }
 
     @GetMapping("/about-us")
     public String about_us() {
-        return "/common/about-us.html";
+        return "common/about-us.html";
     }
 
     @GetMapping("/rooms")
@@ -88,6 +88,6 @@ public class ApiGatewayController {
 
         model.addAttribute("roomContainer", roomContainer);
 
-        return "/booking/rooms.html";
+        return "booking/rooms.html";
     }
 }

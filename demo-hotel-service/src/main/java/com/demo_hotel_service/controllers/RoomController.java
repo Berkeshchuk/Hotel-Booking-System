@@ -35,7 +35,7 @@ public class RoomController {
     @GetMapping("/api/rooms")
     public ResponseEntity<?> getRooms(@RequestParam Integer page, @RequestParam Integer size)
             throws InterruptedException {
-        Thread.sleep(7000);
+        // Thread.sleep(7000);
         return ResponseEntity.ok(roomService.getServiceUnits(RoomUnit.class, PageRequest.of(page, size)));
     }
 

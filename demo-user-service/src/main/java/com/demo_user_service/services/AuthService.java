@@ -25,14 +25,13 @@ public class AuthService {
     // private final RememberMeServices rememberMeServices;
 
     @Transactional
-    public void addUser(UserDto dto){
-        if(dto == null){
+    public void addUser(UserDto dto) {
+        if (dto == null) {
             throw new IllegalArgumentException("cant be null");
         }
-        if(userRepository.existsByLogin(dto.getLogin())){
+        if (userRepository.existsByLogin(dto.getLogin())) {
             throw new LoginAlreadyInUseException("login already in use");
         }
-
 
         User entity = userMapper.toEntity(dto);
         entity.setHashPassword(passwordEncoder.encode(dto.getPassword()));
@@ -43,22 +42,13 @@ public class AuthService {
         userRepository.save(entity);
     }
 
-
-    public void resetPassword() {
-    }
-
-    // при оновленні логіна потрібно оновити і відповідний username в таблиці persistanse_logins
-    // бо redis-сесія спробує загрузити користувача із старим логіном(username), який не змінився в persistanse_logins
-    public void updateLogin(){}
-
-
     public AuthPrincipalDto loadUserByUsername(String login) throws UsernameNotFoundException {
-        if(login == null){
+        if (login == null) {
             throw new IllegalArgumentException();
         }
 
         User user = userRepository.findByLogin(login)
-            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         var authPrincipal = new AuthPrincipalDto();
         authPrincipal.setId(user.getId());
@@ -69,6 +59,16 @@ public class AuthService {
         authPrincipal.setIsEnabled(true);
         authPrincipal.setIsAccountNonLocked(user.getAccountState() != AccountState.BLOCKED);
         return authPrincipal;
+    }
+
+    public void resetPassword() {
+    }
+
+    // при оновленні логіна потрібно оновити і відповідний username в таблиці
+    // persistanse_logins
+    // бо redis-сесія спробує загрузити користувача із старим логіном(username),
+    // який не змінився в persistanse_logins
+    public void updateLogin() {
     }
 
 }

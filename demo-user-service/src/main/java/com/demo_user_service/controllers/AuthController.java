@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.demo_user_service.data.dto.UserDto;
 import com.demo_user_service.services.AuthService;
 
-import com.common.security.AuthPrincipal;
-
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -26,18 +24,6 @@ public class AuthController {
     public ResponseEntity<?> signUp(@ModelAttribute UserDto userDto) {
         authService.addUser(userDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
-
-    @GetMapping("/auth")
-    public String authPage(
-        @AuthenticationPrincipal AuthPrincipal userDetails,
-        @Value("${booking_service_url}") String bookingServiceUrl
-    ) {
-        if (userDetails != null) {
-            // Якщо користувач вже залогінений, перенаправляємо його на /home
-            return "redirect:" + bookingServiceUrl + "/home";
-        }
-        return "auth.html";
     }
 
     @GetMapping("api/internal/auth-principal")

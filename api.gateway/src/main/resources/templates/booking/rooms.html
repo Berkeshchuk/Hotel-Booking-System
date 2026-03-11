@@ -19,12 +19,12 @@
 </head>
 
 <body>
-    <header th:replace="~{/common/header.html :: header}"></header>
+    <header th:replace="~{common/header.html :: header}"></header>
     <main>
         <div class="spacer"></div>
 
         <div sec:authorize="hasRole('ADMIN')" class="post-form-container hidden">
-            <form id="post-form" th:action="@{/api/rooms}" method="post" enctype="multipart/form-data">
+            <form id="post-form" th:action="@{api/rooms}" method="post" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="price">Ціна за ніч (₴)</label>
                     <input type="number" name="price" placeholder="Наприклад: 2500" min="0" required>
@@ -56,7 +56,7 @@
 
         </div>
         <div sec:authorize="hasRole('ADMIN')" class="put-form-container hidden">
-            <form id="put-form" th:action="@{/api/rooms}" method="post" enctype="multipart/form-data">
+            <form id="put-form" th:action="@{api/rooms}" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="roomId" id="put-room-id">
 
                 <div class="form-group">
@@ -122,14 +122,14 @@
         </div>
 
     </main>
-    <footer th:replace="~{/common/footer.html :: footer}"></footer>
+    <footer th:replace="~{common/footer.html :: footer}"></footer>
     <div class="lightbox-overlay hidden" id="lightbox">
         <div class="lightbox-top-bar">
             <div class="lightbox-menu-container">
                 <button class="lightbox-dots-btn" id="lightbox-dots" aria-label="Меню">⋮</button>
                 <div class="lightbox-dropdown hidden" id="lightbox-dropdown">
                     <button sec:authorize="hasRole('ADMIN')" class="lightbox-delete-btn" id="lightbox-delete"
-                        th:data-url="@{/api/images}">Видалити фото</button>
+                        th:data-url="@{api/images}">Видалити фото</button>
                 </div>
             </div>
             <button class="lightbox-close-btn" id="lightbox-close" aria-label="Закрити">✖</button>
@@ -141,12 +141,12 @@
             <button class="lightbox-nav lightbox-next" id="lightbox-next">&gt;</button>
         </div>
     </div>
-    <div th:replace="~{/common/login-overlay.html :: login-overlay}"></div>
+    <div th:replace="~{common/login-overlay.html :: login-overlay}"></div>
 
-    <script th:src="@{/common/js/header.js}"></script>
-    <script th:src="@{/booking/js/rooms.js}"></script>
+    <script th:src="@{common/js/header.js}"></script>
+    <script th:src="@{booking/js/rooms.js}"></script>
 
-    <script sec:authorize="! isAuthenticated()" th:src="@{/common/js/login-overlay.js}"></script>
+    <script sec:authorize="! isAuthenticated()" th:src="@{common/js/login-overlay.js}"></script>
 
 </body>
 

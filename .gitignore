@@ -1,0 +1,25 @@
+# Maven build folder
+target/
+**/target/
+
+# Compiled class files
+*.class
+
+# Generated JARs
+*.jar
+
+# IntelliJ / VSCode
+.idea/
+*.iml
+.vscode/
+
+# Maven logs / temp files
+.mvn/
+*.log
+maven-archiver/
+maven-status/
+
+# OS temp files
+*.tmp
+*.swp
+.DS_Store

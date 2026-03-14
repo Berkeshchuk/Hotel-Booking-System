@@ -20,6 +20,7 @@ import com.demo_hotel_service.repositories.ServiceUnitRepository;
 import jakarta.persistence.EntityNotFoundException;
 
 public class tempTest {
+
     // @Mock
     // private ServiceUnitRepository serviceUnitRepository;
 
@@ -53,4 +54,5 @@ public class tempTest {
     //     assertThrows(EntityNotFoundException.class,
     //             () -> service.getById(1L));
     // }
+
 }

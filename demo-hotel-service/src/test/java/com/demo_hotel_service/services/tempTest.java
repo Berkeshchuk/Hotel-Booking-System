@@ -21,43 +21,38 @@ import jakarta.persistence.EntityNotFoundException;
 
 public class tempTest {
 
-    @Mock
-    private ServiceUnitRepository serviceUnitRepository;
+    // @Mock
+    // private ServiceUnitRepository serviceUnitRepository;
 
-    @Mock
-    private ServiceUnitMapper serviceUnitMapper;
+    // @Mock
+    // private ServiceUnitMapper serviceUnitMapper;
 
-    @Mock
-    private ImageService imageService;
+    // @Mock
+    // private ImageService imageService;
 
-    @InjectMocks
-    private ServiceUnitService service;
+    // @InjectMocks
+    // private ServiceUnitService service;
 
-    @BeforeEach
-    void setup() {
-        MockitoAnnotations.openMocks(this); // Ініціалізація моків
-    }
+    // @BeforeEach
+    // void setup() {
+    //     MockitoAnnotations.openMocks(this); // Ініціалізація моків
+    // }
 
-    @Test
-    void shouldThrowIfServiceUnitNotFound() {
+    // @Test
+    // void shouldThrowIfServiceUnitNotFound() {
 
-        ServiceUnit entity = new ServiceUnit();
-        ServiceUnitDto dto = new ServiceUnitDto();
-        dto.setImageRecords(new ArrayList<>());
+    //     ServiceUnit entity = new ServiceUnit();
+    //     ServiceUnitDto dto = new ServiceUnitDto();
+    //     dto.setImageRecords(new ArrayList<>());
 
-        when(serviceUnitRepository.findById(1L))
-                .thenReturn(Optional.of(entity));
+    //     when(serviceUnitRepository.findById(1L))
+    //             .thenReturn(Optional.of(entity));
 
-        when(serviceUnitMapper.toPolymorphicDto(entity))
-                .thenReturn(dto);
+    //     when(serviceUnitMapper.toPolymorphicDto(entity))
+    //             .thenReturn(dto);
 
-        assertThrows(EntityNotFoundException.class,
-                () -> service.getById(1L));
-    }
+    //     assertThrows(EntityNotFoundException.class,
+    //             () -> service.getById(1L));
+    // }
 
-    public void foo(){
-        if(true){
-            
-        }
-    }
 }

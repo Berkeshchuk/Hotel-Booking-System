@@ -12,6 +12,8 @@ jobs:
       # Копіюємо код репозиторію на віртуальну машину
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 #завантажує всю історію комітів
 
       - name: Set up JDK 21
         uses: actions/setup-java@v3
@@ -25,3 +27,8 @@ jobs:
 
       - name: Run Tests
         run: mvn -B clean test
+      
+      - name: Analyze with SonarCloud
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Berkeshchuk_Hotel-Booking-System -Dsonar.organization=berkeshchuk -Dsonar.host.url=https://sonarcloud.io

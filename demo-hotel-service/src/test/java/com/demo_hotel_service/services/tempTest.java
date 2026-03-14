@@ -56,9 +56,4 @@ public class tempTest {
     // }
 
 
-    void badMethod(){
-        Object object = null;
-        object.toString();
-    }
-
 }

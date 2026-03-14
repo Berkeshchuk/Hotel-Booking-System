@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.demo_hotel_service.services.BookingUnitServiceTest
 -------------------------------------------------------------------------------
-Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.100 s -- in com.demo_hotel_service.services.BookingUnitServiceTest
+Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.674 s -- in com.demo_hotel_service.services.BookingUnitServiceTest

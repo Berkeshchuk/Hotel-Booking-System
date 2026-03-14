@@ -54,4 +54,10 @@ public class tempTest {
         assertThrows(EntityNotFoundException.class,
                 () -> service.getById(1L));
     }
+
+    public void foo(){
+        if(true){
+            
+        }
+    }
 }

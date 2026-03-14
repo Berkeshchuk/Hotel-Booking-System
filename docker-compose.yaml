@@ -12,7 +12,7 @@ services:
     ports:
       - "3307:3306"
     environment:
-      - MYSQL_ROOT_PASSWORD=admin
+      - MYSQL_ROOT_PASSWORD=${DATA_BASE_PASSWORD}
       # Для створення одразу трьох БД нам потрібен скрипт ініціалізації (див. інструкцію нижче)
     volumes:
       - mysql_data:/var/lib/mysql
@@ -56,6 +56,7 @@ services:
       - REDIS_PASSWORD=${REDIS_PASSWORD}
       - JWT_SECRET_KEY=${JWT_SECRET_KEY}
       - REMEMBER_ME_KEY=${REMEMBER_ME_KEY}
+      - DATA_BASE_PASSWORD=${DATA_BASE_PASSWORD}
     networks:
       - edemium-network
     depends_on:
@@ -74,6 +75,7 @@ services:
       - SPRING_DATA_REDIS_HOST=redis-cache
       - REDIS_PASSWORD=${REDIS_PASSWORD}
       - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - DATA_BASE_PASSWORD=${DATA_BASE_PASSWORD}
       # Вказуємо змінну user.home, щоб шлях ${user.home}/hotel-uploads/ вів у папку /app/
       - USER_HOME=/app
     volumes:
@@ -95,6 +97,7 @@ services:
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/java_hotel_user_service_db?useSSL=false&serverTimezone=UTC
       - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - DATA_BASE_PASSWORD=${DATA_BASE_PASSWORD}
     networks:
       - edemium-network
     depends_on:

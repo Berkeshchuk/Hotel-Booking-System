@@ -1,9 +1,6 @@
 version: '3.8'
 
 services:
-  # ==========================================
-  # ІНФРАСТРУКТУРА (БД та Кеш)
-  # ==========================================
   
   mysql-db:
     image: mysql:8.0
@@ -13,10 +10,9 @@ services:
       - "3307:3306"
     environment:
       - MYSQL_ROOT_PASSWORD=${DATA_BASE_PASSWORD}
-      # Для створення одразу трьох БД нам потрібен скрипт ініціалізації (див. інструкцію нижче)
     volumes:
       - mysql_data:/var/lib/mysql
-      # Монтуємо скрипт, який створить всі 3 бази при першому запуску
+      # Монтуємо скрипт, який створить 3 бази даних при першому запуску
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - edemium-network
@@ -27,16 +23,11 @@ services:
     restart: unless-stopped
     ports:
       - "6380:6379"
-    # Запускаємо Redis із паролем, який беремо з .env файлу
     command: redis-server --requirepass ${REDIS_PASSWORD}
     volumes:
       - redis_data:/data
     networks:
       - edemium-network
-
-  # ==========================================
-  # МІКРОСЕРВІСИ
-  # ==========================================
 
   api-gateway:
     build:
@@ -45,14 +36,13 @@ services:
     container_name: api-gateway
     restart: on-failure
     ports:
-      - "8085:8085" # Єдиний порт, відкритий назовні для користувачів/фронтенду
+      - "8085:8085"
     environment:
-      # Підміняємо localhost на імена контейнерів
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/persistent_login_db?useSSL=false&serverTimezone=UTC
       - SPRING_DATA_REDIS_HOST=redis-cache
       - USER_SERVICE_URL=http://demo-user-service:8086
       - BOOKING_SERVICE_URL=http://demo-hotel-service:8087
-      # Зчитуємо секрети з .env файлу (щоб не тримати їх прямо тут у тексті)
+
       - REDIS_PASSWORD=${REDIS_PASSWORD}
       - JWT_SECRET_KEY=${JWT_SECRET_KEY}
       - REMEMBER_ME_KEY=${REMEMBER_ME_KEY}
@@ -69,7 +59,7 @@ services:
       dockerfile: demo-hotel-service/Dockerfile
     container_name: demo-hotel-service
     restart: on-failure
-    # Не вказуємо секцію ports, сервіс доступний лише зсередини мережі
+
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/java_hotel_booking_service_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
       - SPRING_DATA_REDIS_HOST=redis-cache
@@ -93,7 +83,6 @@ services:
       dockerfile: demo-user-service/Dockerfile
     container_name: demo-user-service
     restart: on-failure
-    # Не вказуємо секцію ports, сервіс доступний лише зсередини мережі
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/java_hotel_user_service_db?useSSL=false&serverTimezone=UTC
       - JWT_SECRET_KEY=${JWT_SECRET_KEY}

@@ -16,8 +16,15 @@ spec:
       - name: mysql
         image: mysql:8.0
         env:
-        - name: MYSQL_ROOT_PASSWORD
-          value: admin
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: edemium-credentials
+                key: db-password
+                
+          - name: MYSQL_ROOT_HOST
+            value: "%"
+        
         ports:
         - containerPort: 3306
         volumeMounts:

@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-initdb-config
+data:
+  init.sql: |
+    CREATE DATABASE IF NOT EXISTS java_hotel_booking_service_db;
+    CREATE DATABASE IF NOT EXISTS java_hotel_user_service_db;
+    CREATE DATABASE IF NOT EXISTS persistent_login_db;

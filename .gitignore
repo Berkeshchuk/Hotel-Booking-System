@@ -1,25 +1,36 @@
-# Maven build folder
+# Maven
 target/
 **/target/
+.mvn/wrapper/maven-wrapper.jar
 
-# Compiled class files
+# Secrets
+**/edemium-secrets.yaml
+.env
+*.env
+
+# Logs
+*.log
+logs/
+target/surefire-reports/
+
+# Build artifacts
 *.class
-
-# Generated JARs
 *.jar
 
-# IntelliJ / VSCode
+# Generated
+generated-sources/
+
+# IDE
 .idea/
 *.iml
 .vscode/
 
-# Maven logs / temp files
-.mvn/
-*.log
-maven-archiver/
-maven-status/
-
-# OS temp files
+# OS
 *.tmp
 *.swp
 .DS_Store
+
+# Runtime
+*.pid
+*.seed
+*.out

@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-user-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demo-user-service
+  template:
+    metadata:
+      labels:
+        app: demo-user-service
+    spec:
+      containers:
+      - name: user-service
+        image: demo-user-service:latest
+        imagePullPolicy: Never
+        env:
+        - name: SPRING_DATASOURCE_URL
+          value: "jdbc:mysql://mysql-db:3306/java_hotel_user_service_db?useSSL=false&serverTimezone=UTC"
+        - name: JWT_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: edemium-credentials
+              key: jwt-secret-key
+        - name: DATA_BASE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: edemium-credentials
+              key: db-password
+        ports:
+        - containerPort: 8086
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo-user-service
+spec:
+  selector:
+    app: demo-user-service
+  ports:
+    - port: 8086
+      targetPort: 8086

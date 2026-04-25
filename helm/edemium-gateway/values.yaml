@@ -36,7 +36,7 @@ postgresql:
   auth:
     username: postgres
     password: admin
-    database: edemium # Назва твоєї БД, якщо потрібна специфічна
+    database: edemium
   primary:
     persistence:
       enabled: false

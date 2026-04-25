@@ -30,7 +30,17 @@ helm upgrade gateway-release ./helm/edemium-gateway
 
 
 #lab4
+kubectl port-forward svc/argocd-server -n argocd 8080:443
 #пароль argo
 [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($(kubectl get secret argocd-initial-admin-secret -n argocd -o jsonpath="{.data.password}")))
 
+#можливо потрібно буде видалити: 
+kubectl delete statefulset edemium-db-postgresql
+# у складних ситуаціях
+Remove-Item -Recurse -Force .\helm\edemium-gateway\charts
+Remove-Item -Force .\helm\edemium-gateway\Chart.lock
 
+# і одразу збудувати
+helm dependency build ./helm/edemium-gateway
+
+kubectl describe pod edemium-db-postgresql-0 - опис помилок

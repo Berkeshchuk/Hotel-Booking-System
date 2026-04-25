@@ -62,8 +62,8 @@ services:
 
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/java_hotel_booking_service_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
-      - SPRING_DATA_REDIS_HOST=redis-cache
-      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      # - SPRING_DATA_REDIS_HOST=redis-cache
+      # - REDIS_PASSWORD=${REDIS_PASSWORD}
       - JWT_SECRET_KEY=${JWT_SECRET_KEY}
       - DATA_BASE_PASSWORD=${DATA_BASE_PASSWORD}
       # Вказуємо змінну user.home, щоб шлях ${user.home}/hotel-uploads/ вів у папку /app/

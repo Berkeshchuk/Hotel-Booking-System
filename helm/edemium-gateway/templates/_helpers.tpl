@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "edemium-hotel.name" -}}
+{{- define "edemium-gateway.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
@@ -10,7 +10,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "edemium-hotel.fullname" -}}
+{{- define "edemium-gateway.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -26,16 +26,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "edemium-hotel.chart" -}}
+{{- define "edemium-gateway.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "edemium-hotel.labels" -}}
-helm.sh/chart: {{ include "edemium-hotel.chart" . }}
-{{ include "edemium-hotel.selectorLabels" . }}
+{{- define "edemium-gateway.labels" -}}
+helm.sh/chart: {{ include "edemium-gateway.chart" . }}
+{{ include "edemium-gateway.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -45,17 +45,17 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "edemium-hotel.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "edemium-hotel.name" . }}
+{{- define "edemium-gateway.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "edemium-gateway.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "edemium-hotel.serviceAccountName" -}}
+{{- define "edemium-gateway.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (include "edemium-hotel.fullname" .) .Values.serviceAccount.name }}
+{{- default (include "edemium-gateway.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}

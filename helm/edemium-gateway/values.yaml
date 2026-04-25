@@ -1,0 +1,32 @@
+replicaCount: 1
+
+image:
+  repository: api-gateway
+  tag: "latest"
+  pullPolicy: Never
+
+service:
+  type: NodePort
+  port: 8085
+  nodePort: 30085
+
+# Хости залежностей (мають збігатися з іменами Service у k8s)
+db:
+  host: edemium-db-postgresql
+  port: 5432
+
+redis:
+  host: redis-cache
+
+# Налаштування Probe (порт 8085)
+livenessProbe:
+  tcpSocket:
+    port: 8085
+  initialDelaySeconds: 120
+  periodSeconds: 20
+
+readinessProbe:
+  tcpSocket:
+    port: 8085
+  initialDelaySeconds: 120
+  periodSeconds: 10

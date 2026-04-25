@@ -18,7 +18,7 @@ spec:
         imagePullPolicy: Never
         env:
         - name: SPRING_DATASOURCE_URL
-          value: "jdbc:mysql://mysql-db:3306/persistent_login_db?useSSL=false&serverTimezone=UTC"
+          value: "jdbc:postgresql://localhost:5432/persistent_login_db?sslmode=disable"
         - name: SPRING_DATA_REDIS_HOST
           value: "redis-cache"
         - name: USER_SERVICE_URL
@@ -47,6 +47,16 @@ spec:
               key: remember-me-key
         ports:
         - containerPort: 8085
+        livenessProbe:
+          tcpSocket:
+            port: 8085
+          initialDelaySeconds: 120
+          periodSeconds: 20
+        readinessProbe:
+          tcpSocket:
+            port: 8085
+          initialDelaySeconds: 120
+          periodSeconds: 10
 ---
 apiVersion: v1
 kind: Service

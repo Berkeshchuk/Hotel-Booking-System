@@ -1,0 +1,36 @@
+minikube -p minikube docker-env | Invoke-Expression
+
+
+#ручне розгортання
+kubectl apply -f k8s/edemium-secrets.yaml
+kubectl apply -f k8s/postgresql-configmap.yaml
+kubectl apply -f k8s/postgresql-deployment.yaml
+kubectl apply -f k8s/redis-deployment.yaml
+kubectl apply -f k8s/api-gateway-deployment.yaml
+kubectl get pods
+
+#розгортання за допомогою hex
+kubectl delete deployment --all
+kubectl delete service --all
+# kubectl delete pod <pod-name> - якщо треба видалити под окремо
+
+helm install edemium-db bitnami/postgresql --set auth.username=postgres --set auth.password=admin --set primary.persistence.enabled=false
+helm upgrade --install gateway-release ./helm/edemium-gateway
+kubectl get pods
+
+
+helm upgrade gateway-release ./helm/edemium-gateway
+
+
+
+
+
+
+
+
+
+#lab4
+#пароль argo
+[System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($(kubectl get secret argocd-initial-admin-secret -n argocd -o jsonpath="{.data.password}")))
+
+

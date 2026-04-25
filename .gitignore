@@ -7,6 +7,7 @@ target/
 **/edemium-secrets.yaml
 .env
 *.env
+**.env
 
 # Logs
 *.log

@@ -30,3 +30,13 @@ readinessProbe:
     port: 8085
   initialDelaySeconds: 120
   periodSeconds: 10
+
+postgresql:
+  fullnameOverride: "edemium-db-postgresql"
+  auth:
+    username: postgres
+    password: admin
+    database: edemium # Назва твоєї БД, якщо потрібна специфічна
+  primary:
+    persistence:
+      enabled: false

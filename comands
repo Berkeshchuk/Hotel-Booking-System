@@ -14,7 +14,6 @@ kubectl delete deployment --all
 kubectl delete service --all
 # kubectl delete pod <pod-name> - якщо треба видалити под окремо
 
-#helm install edemium-db bitnami/postgresql --set auth.username=postgres --set auth.password=admin --set primary.persistence.enabled=false
 helm upgrade --install gateway-release ./helm/edemium-gateway
 kubectl get pods
 

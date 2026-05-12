@@ -17,7 +17,6 @@ db:
 redis:
   host: redis-cache
 
-# Налаштування Probe
 livenessProbe:
   tcpSocket:
     port: 8085

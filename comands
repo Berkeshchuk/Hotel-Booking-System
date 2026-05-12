@@ -1,4 +1,5 @@
 minikube -p minikube docker-env | Invoke-Expression
+docker build -t api-gateway:latest -f api.gateway/Dockerfile .
 
 
 #ручне розгортання
@@ -12,7 +13,7 @@ kubectl get pods
 #розгортання за допомогою hex
 kubectl delete deployment --all
 kubectl delete service --all
-# kubectl delete pod <pod-name> - якщо треба видалити под окремо
+# kubectl delete pod <pod-name>
 
 helm upgrade --install gateway-release ./helm/edemium-gateway
 kubectl get pods
@@ -29,6 +30,8 @@ helm upgrade gateway-release ./helm/edemium-gateway
 
 
 #lab4
+https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+
 kubectl port-forward svc/argocd-server -n argocd 8080:443
 #пароль argo
 [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($(kubectl get secret argocd-initial-admin-secret -n argocd -o jsonpath="{.data.password}")))

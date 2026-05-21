@@ -49,21 +49,21 @@ public class ServiceUnit {
     @Column(length = 4000, nullable = false)
     private String description;
 
-    @Column(length = 100, nullable = false)
+    @Column(length = 30, nullable = false)
     private String type;
 
     @Column(nullable = false)
     private boolean hiddenFromClient = true; //приховано для майбутніх бронювань, поточні обслуговуються далі
 
-    @Column(nullable = false)
-    private boolean outOfService = true; //послугу неможливо фізично надати(поломка, форс-мажор, послуга - застаріла) на невизначений час
+    // @Column(nullable = false)
+    // private boolean outOfService = true; //послугу неможливо фізично надати(поломка, форс-мажор, послуга - застаріла) на невизначений час
 
     @Column(nullable = false)
     private int guestCapacity;
 
     @ElementCollection
     @CollectionTable(name = "service_unit_facilities")
-    @Column(name = "facility", length = 255, nullable = false)
+    @Column(name = "facility", length = 20, nullable = false)
     private Set<String> facilities;
 
     @OneToMany(mappedBy = "serviceUnit", cascade = { CascadeType.PERSIST }, fetch = FetchType.LAZY)
@@ -73,14 +73,13 @@ public class ServiceUnit {
     private Integer version;
 
     public ServiceUnit(long id, BigDecimal price, String description, String type,
-            boolean hiddenFromClient, boolean outOfService,
+            boolean hiddenFromClient,
             int guestCapacity, Set<String> facilities, List<ImageRecord> imageRecords) {
         this.id = id;
         this.price = price;
         this.description = description;
         this.type = type;
         this.hiddenFromClient = hiddenFromClient;
-        this.outOfService = outOfService;
         this.guestCapacity = guestCapacity;
         this.facilities = facilities != null ? new HashSet<>(facilities) : new HashSet<>();
         this.imageRecords = imageRecords;

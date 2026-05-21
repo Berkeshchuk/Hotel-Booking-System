@@ -1,5 +1,6 @@
 package com.demo_hotel_service.data.models.bookings;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import com.common.enums.Gender;
@@ -30,5 +31,15 @@ public class BookingSpaUnit extends BookingUnit {
     public BookingSpaUnit(long id, GeneralBooking booking, int clientCount, LocalDateTime start, LocalDateTime end, SpaUnit spaUnit, Gender preferedGender){
         super(id, booking, spaUnit, clientCount, start, end);
         this.preferedGender = preferedGender;
+    }
+
+    @Override
+    public BigDecimal calculateAmount() {
+        if (this.getServiceUnit() == null || this.getServiceUnit().getPrice() == null) {
+            return BigDecimal.ZERO;
+        }
+        
+        int count = this.getClientCount();
+        return this.getServiceUnit().getPrice().multiply(BigDecimal.valueOf(count));
     }
 }

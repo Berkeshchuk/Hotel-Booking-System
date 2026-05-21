@@ -1,5 +1,6 @@
 package com.demo_hotel_service.data.models.bookings;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -45,11 +46,11 @@ public class BookingUnit {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private ServiceUnit serviceUnit;
-    @Transient
-    private Long serviceUnitId;
+    // @Transient
+    // private Long serviceUnitId;
 
     @Enumerated(value = EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private BookingStatus status;
     @Column(nullable = false)
     private int clientCount;
@@ -61,7 +62,13 @@ public class BookingUnit {
     @Column(nullable = false)
     private LocalDateTime start;
     @Column(nullable = false)
-    private LocalDateTime end;
+    private LocalDateTime end; //  час звільнення кімнати
+
+    // @Column(nullable = true)
+    // private LocalDateTime technicalEnd; //  час звільнення кімнати + час на прибирання
+
+    @Column(name = "amount", precision = 10, scale = 2)
+    private BigDecimal amount;
 
     @Version
     Integer version;
@@ -75,4 +82,9 @@ public class BookingUnit {
         this.start = start;
         this.end = end;
     }
+
+    public  BigDecimal calculateAmount(){
+        return new BigDecimal(0);
+    }
+
 }

@@ -10,7 +10,7 @@ public class AuthPrincipalDto {
     private String login;
     private String password;
     private String role;
-    private String mobileNumber;
+    private String phoneNumber;
     private Boolean isEnabled;
     private Boolean isAccountNonLocked;
 }

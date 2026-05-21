@@ -9,6 +9,7 @@ import org.springframework.web.client.RestClient.ResponseSpec;
 
 import com.common.security.AuthPrincipal;
 import com.common.security.AuthPrincipalDto;
+import com.common.security.JwtUtil;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {

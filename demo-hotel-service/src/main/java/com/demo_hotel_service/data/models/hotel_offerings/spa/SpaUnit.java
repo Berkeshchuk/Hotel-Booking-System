@@ -66,8 +66,8 @@ public class SpaUnit extends ServiceUnit {
     private List<StringPair> careProductsDescriptions;
 
     public SpaUnit(long id, BigDecimal price, String description, String type, boolean isHiddenFromClient,
-            boolean isOutOfService, int guestCapacity, Set<String> facilities, List<ImageRecord> images) {
-        super(id, price, description, type, isHiddenFromClient, isOutOfService, guestCapacity, facilities, images);
+                   int guestCapacity, Set<String> facilities, List<ImageRecord> images) {
+        super(id, price, description, type, isHiddenFromClient, guestCapacity, facilities, images);
     }
 
 

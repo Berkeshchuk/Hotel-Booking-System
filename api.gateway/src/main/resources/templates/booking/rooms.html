@@ -9,16 +9,19 @@
     <link rel="stylesheet" th:href="@{common/css/header.css}">
     <link rel="stylesheet" th:href="@{booking/css/rooms.css}">
     <link rel="stylesheet" th:href="@{common/css/login-overlay.css}">
+    <link rel="stylesheet" th:href="@{booking/css/cart.css}">
     <link sec:authorize="hasRole('ADMIN')" rel="stylesheet" th:href="@{booking/css/room-form.css}">
     <link sec:authorize="hasRole('ADMIN')" rel="stylesheet" th:href="@{booking/css/delete-modal-window.css}">
-    <link sec:authorize="hasRole('ADMIN')" rel="stylesheet" th:href="@{booking/css/lightbox-overlay.css}">
-    <link sec:authorize="hasRole('ADMIN')" rel="stylesheet" th:href="@{booking/css/scroll-loader.css}">
+    <link rel="stylesheet" th:href="@{booking/css/lightbox-overlay.css}">
+    <link rel="stylesheet" th:href="@{booking/css/scroll-loader.css}">
+
 
     <meta name="_csrf" th:content="${_csrf.token}">
     <meta name="_csrf_header" th:content="${_csrf.headerName}">
 </head>
 
 <body>
+    <div th:replace="~{common/header.html :: change-phone-modal-container}"></div>
     <header th:replace="~{common/header.html :: header}"></header>
     <main>
         <div class="spacer"></div>
@@ -46,6 +49,14 @@
                     <label>Зручності</label>
                     <div class="form-facility-container"></div>
                 </div>
+
+                <div class="form-group checkbox-group" style="margin: 15px 0;">
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: #1e293b; font-weight: 600;">
+                        <input type="checkbox" name="hiddenFromClient" style="width: 18px; height: 18px; accent-color: #3b82f6;" checked>
+                        Приховати кімнату від клієнтів
+                    </label>
+                </div>
+
                 <div class="form-group">
                     <label for="images">Фотографії кімнати</label>
                     <input class="file-input" type="file" name="post-images" accept="image/*" multiple>
@@ -79,6 +90,14 @@
                     <label>Зручності</label>
                     <div class="form-facility-container" id="put-facilities"></div>
                 </div>
+
+                <div class="form-group checkbox-group" style="margin: 15px 0;">
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: #1e293b; font-weight: 600;">
+                        <input type="checkbox" id="put-hidden" name="hiddenFromClient" style="width: 18px; height: 18px; accent-color: #3b82f6;">
+                        Приховати кімнату від клієнтів
+                    </label>
+                </div>
+
                 <div class="form-group">
                     <label for="put-images">Додати нові фотографії</label>
                     <input class="file-input" type="file" name="post-images" accept="image/*" multiple>
@@ -96,14 +115,17 @@
 
                 <div class="delete-modal-actions">
                     <button class="cancel-delete-btn">Cancel</button>
-                    <button class="confirm-delete-btn" data-room-id="">Delete</button>
+                    <button class="confirm-delete-btn" data-service-id="">Delete</button>
                 </div>
             </div>
         </div>
 
         <button sec:authorize="hasRole('ADMIN')" class="fixed-add-room-btn" id="post-form-opener">Додати
             кімнату</button>
-        <div class="room-container1" th:utext="${roomContainer}">
+        <div class="cards-grid">
+            <th:block th:each="room : ${rooms}">
+                <div th:replace="~{booking/room-container.html :: roomCard(${room})}"></div>
+            </th:block>
         </div>
         <div id="infinite-scroll-status" class="infinite-scroll-status">
             <div id="scroll-loader" class="scroll-loader hidden">
@@ -121,6 +143,8 @@
             </div>
         </div>
 
+
+        
     </main>
     <footer th:replace="~{common/footer.html :: footer}"></footer>
     <div class="lightbox-overlay hidden" id="lightbox">
@@ -129,7 +153,7 @@
                 <button class="lightbox-dots-btn" id="lightbox-dots" aria-label="Меню">⋮</button>
                 <div class="lightbox-dropdown hidden" id="lightbox-dropdown">
                     <button sec:authorize="hasRole('ADMIN')" class="lightbox-delete-btn" id="lightbox-delete"
-                        th:data-url="@{api/images}">Видалити фото</button>
+                        th:data-url="@{/api/image}">Видалити фото</button>
                 </div>
             </div>
             <button class="lightbox-close-btn" id="lightbox-close" aria-label="Закрити">✖</button>
@@ -145,6 +169,7 @@
 
     <script th:src="@{common/js/header.js}"></script>
     <script th:src="@{booking/js/rooms.js}"></script>
+    <script th:src="@{booking/js/cart.js}"></script>
 
     <script sec:authorize="! isAuthenticated()" th:src="@{common/js/login-overlay.js}"></script>
 

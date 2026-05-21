@@ -10,8 +10,8 @@ import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.demo_hotel_service.data.dto.ImageRecordDto;
-import com.demo_hotel_service.data.dto.dto_mappers.ImageMapper;
+import com.common.dto.demo_hotel_service_dto.ImageRecordDto;
+import com.demo_hotel_service.data.dto_mappers.ImageMapper;
 import com.demo_hotel_service.data.models.hotel_offerings.abstraction.ServiceUnit;
 import com.demo_hotel_service.data.models.images.ImageRecord;
 import com.demo_hotel_service.repositories.ImageRepository;

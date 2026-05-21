@@ -30,7 +30,7 @@ main {
     position: fixed;
     bottom: 20px;
     right: 20px;
-    z-index: 1000;
+    z-index: 40;
     background-color: var(--accent);
     color: white;
     border: none;
@@ -53,7 +53,7 @@ main {
     transform: translateY(1px);
 }
 
-.room-container2 {
+.cards-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 18px;
@@ -69,6 +69,11 @@ main {
 }
 
 .room-card {
+    /* Додаємо ці два рядки: */
+    display: flex;
+    flex-direction: column;
+    
+    /* Твої існуючі стилі залишаються без змін: */
     position: relative;
     padding: 0;
     overflow: hidden;
@@ -155,6 +160,12 @@ main {
 }
 
 .room-card-content {
+    /* Додаємо ці три рядки: */
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* Дозволяє контенту розтягнутися на всю висоту картки */
+    
+    /* Твій існуючий стиль: */
     padding: 18px;
 }
 
@@ -198,6 +209,24 @@ main {
     font-weight: 600;
     color: #333;
     margin: 0 0 8px;
+}
+
+.card .cta {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    background: var(--accent);
+    color: white;
+    transition: all 0.2s;
+    border: none;
+    margin-left: 12px;
+    margin-top: 12px;
+}
+
+.card .cta:hover {
+    background: var(--accent-dark);
 }
 
 .facilities-list {
@@ -270,4 +299,91 @@ main {
 
 .rooms-loader.show {
     display: block;
+}
+
+
+/* --- Стилі для обраної картки --- */
+.room-card {
+    transition: all 0.3s ease;
+    border: 2px solid transparent; /* Щоб картка не стрибала при виділенні */
+}
+
+.room-card.selected-in-cart {
+    border: 2px solid var(--accent);
+    box-shadow: 0 8px 20px rgba(43, 122, 120, 0.15);
+    background-color: #fcfefe; /* Легкий відтінок фону */
+}
+
+/* --- Контролер кількості (+ / -) --- */
+.service-quantity-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f0f9f9;
+    border: 1px solid var(--accent);
+    border-radius: 8px;
+    padding: 0 5px;
+    height: 38px;
+    width: 100%;
+    margin-top: 12px;
+}
+
+.btn-qty-minus, .btn-qty-plus {
+    background: none;
+    border: none;
+    color: var(--accent);
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    width: 35px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+    border-radius: 6px;
+}
+
+.btn-qty-minus:hover, .btn-qty-plus:hover {
+    background: rgba(43, 122, 120, 0.1);
+}
+
+.service-qty-value {
+    font-weight: 700;
+    font-size: 16px;
+    color: #111;
+}
+
+
+/* Робимо приховану картку напівпрозорою та чорно-білою для візуального відділення */
+.room-card-client-hidden {
+    opacity: 0.65;
+    filter: grayscale(40%);
+    border: 2px dashed #94a3b8;
+    position: relative; /* Для позиціонування беджа */
+    transition: all 0.3s ease;
+}
+
+.room-card-client-hidden:hover {
+    opacity: 0.9;
+    filter: grayscale(0%);
+}
+
+/* Бедж, який висить поверх фотографії */
+.admin-hidden-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: rgba(15, 23, 42, 0.85); /* Темно-синій напівпрозорий */
+    color: white;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    backdrop-filter: blur(4px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }

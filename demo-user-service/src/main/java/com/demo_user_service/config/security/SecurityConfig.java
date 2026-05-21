@@ -9,6 +9,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import com.common.security.JwtFilter;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,7 +28,14 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/internal/auth-principal").hasAuthority("SYSTEM_SERVICE")
+                .requestMatchers(
+                    new AntPathRequestMatcher("/api/users/profile/phone/request-update"),
+                    new AntPathRequestMatcher("/api/users/profile/phone/verify-update")
+                ).authenticated()
+                .requestMatchers(
+                    new AntPathRequestMatcher("/api/internal/auth-principal"),
+                    new AntPathRequestMatcher("/api/internal/users/exists-by-phone")
+                ).hasAuthority("SYSTEM_SERVICE")
                 .anyRequest().permitAll()
             )
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

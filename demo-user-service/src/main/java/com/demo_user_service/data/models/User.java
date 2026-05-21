@@ -29,15 +29,13 @@ public class User {
     @Column(nullable = false)
     String hashPassword;
     @Column(nullable = true, unique = true)
-    String email;
-    @Column(nullable = true, unique = true)
     String phoneNumber;
 
     @Column(nullable = false)
     private AccountState accountState = AccountState.ACTIVE;
 
-    int trustLevel;
-    int consecutiveCancellations;
+    // int trustLevel;
+    // int consecutiveCancellations;
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)

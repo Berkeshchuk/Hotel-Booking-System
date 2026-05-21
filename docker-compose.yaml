@@ -42,6 +42,7 @@ services:
       - SPRING_DATA_REDIS_HOST=redis-cache
       - USER_SERVICE_URL=http://demo-user-service:8086
       - BOOKING_SERVICE_URL=http://demo-hotel-service:8087
+      - RESOURCE_SERVICE_URL=http://demo-resource-service:8088
 
       - REDIS_PASSWORD=${REDIS_PASSWORD}
       - JWT_SECRET_KEY=${JWT_SECRET_KEY}
@@ -92,6 +93,21 @@ services:
     depends_on:
       - mysql-db
 
+  demo-resource-service:
+    build:
+      context: .
+      dockerfile: demo-resource-service/Dockerfile
+    container_name: demo-resource-service
+    restart: on-failure
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/java_hotel_booking_resource_service_db?useSSL=false&serverTimezone=UTC
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - DATA_BASE_PASSWORD=${DATA_BASE_PASSWORD}
+    networks:
+      - edemium-network
+    depends_on:
+      - mysql-db
+
 networks:
   edemium-network:
     driver: bridge
@@ -100,3 +116,6 @@ volumes:
   mysql_data:
   redis_data:
   hotel_uploads:
+
+  # docker compose build --no-cache
+  # compose up --force-recreate

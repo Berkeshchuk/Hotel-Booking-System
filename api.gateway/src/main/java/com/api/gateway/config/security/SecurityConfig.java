@@ -28,7 +28,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 
 @Configuration
-@EnableRedisHttpSession(maxInactiveIntervalInSeconds = 60)
+@EnableRedisHttpSession(maxInactiveIntervalInSeconds = 2700)
 @EnableMethodSecurity
 public class SecurityConfig {
 
@@ -48,25 +48,41 @@ public class SecurityConfig {
                 headers.contentSecurityPolicy(csp ->
                     csp.policyDirectives("""
                         default-src 'self';
-                        script-src 'self';
-                        style-src 'self';
+                        script-src 'self' https://unpkg.com;
+                        style-src 'self' 'unsafe-inline' https://unpkg.com;
                         img-src 'self' data:;
                         object-src 'none';
                         base-uri 'none';
                         frame-ancestors 'none';
-                        connect-src 'self' http://localhost:8087;
+                        connect-src 'self' http://localhost:8087 https://unpkg.com;
                     """.replace("\n", " "))
                 )
             )
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/bookings-cart").authenticated()
-                .requestMatchers("/bookings-submit").authenticated()
-                .requestMatchers("/api/bookings").authenticated()
+                .requestMatchers(
+                    new AntPathRequestMatcher("/api/bookings", "POST")
+                ).permitAll()
+                .requestMatchers(
+                    new AntPathRequestMatcher("/api/bookings/**", "GET"),
+                    new AntPathRequestMatcher("/api/bookings/**", "PUT"),
+                    new AntPathRequestMatcher("/api/bookings/**", "DELETE"),
+                    new AntPathRequestMatcher("/api/bookings/**", "PATCH"),
+                    new AntPathRequestMatcher("/api/bookings/*/units", "POST")
+                ).authenticated()
                 .requestMatchers(
                     new AntPathRequestMatcher("/api/rooms", "POST"),
                     new AntPathRequestMatcher("/api/rooms", "PUT"),
-                    new AntPathRequestMatcher("/api/rooms", "DELETE"),
-                    new AntPathRequestMatcher("/api/images", "DELETE")
+                    new AntPathRequestMatcher("/api/rooms/*", "DELETE"),
+                    new AntPathRequestMatcher("/api/spas", "POST"),
+                    new AntPathRequestMatcher("/api/spas", "PUT"),
+                    new AntPathRequestMatcher("/api/spas/*", "DELETE"),
+                    new AntPathRequestMatcher("/api/image", "DELETE"),
+                    new AntPathRequestMatcher("/api/admin/bookings"),
+
+                    new AntPathRequestMatcher("/api/physical-units/**"), 
+                    new AntPathRequestMatcher("/api/spa-workers/**"),
+                    new AntPathRequestMatcher("/api/allocations/**"),
+                    new AntPathRequestMatcher("/admin**")
                 ).hasRole("ADMIN")
                 .anyRequest().permitAll()
             )

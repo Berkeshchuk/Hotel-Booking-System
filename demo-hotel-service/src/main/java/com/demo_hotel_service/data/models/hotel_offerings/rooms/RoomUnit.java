@@ -24,9 +24,9 @@ import lombok.ToString;
 public class RoomUnit extends ServiceUnit {
 
     public RoomUnit(long id, BigDecimal price, String description, String type, boolean isHiddenFromClient,
-            boolean isOutOfService, Set<String> facilities, int guestCapacity,
+            Set<String> facilities, int guestCapacity,
             List<ImageRecord> images) {
-        super(id, price, description, type, isHiddenFromClient, isOutOfService, guestCapacity, facilities, images);
+        super(id, price, description, type, isHiddenFromClient, guestCapacity, facilities, images);
     }
 
 }

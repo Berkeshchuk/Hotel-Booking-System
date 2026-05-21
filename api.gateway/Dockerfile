@@ -1,4 +1,4 @@
-# Етап 1: Збірка (Build)
+# Етап 1: Збірка
 FROM maven:3.9.6-eclipse-temurin-21 AS build
 WORKDIR /app
 
@@ -8,7 +8,7 @@ RUN cd common && mvn clean install
 COPY api.gateway ./api.gateway
 RUN cd api.gateway && mvn clean package -DskipTests
 
-# Етап 2: Запуск (Run)
+# Етап 2: Запуск
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 

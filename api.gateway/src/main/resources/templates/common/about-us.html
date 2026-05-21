@@ -9,11 +9,13 @@
     <link rel="stylesheet" th:href="@{common/css/header.css}">
     <link rel="stylesheet" th:href="@{common/css/about-us.css}">
     <link rel="stylesheet" th:href="@{common/css/login-overlay.css}">
+    <link rel="stylesheet" th:href="@{booking/css/cart.css}">
     <meta name="_csrf" th:content="${_csrf.token}">
     <meta name="_csrf_header" th:content="${_csrf.headerName}">
 </head>
 
 <body>
+    <div th:replace="~{common/header.html :: change-phone-modal-container}"></div>
     <header th:replace="~{common/header.html :: header}"></header>
 
     <main>
@@ -29,7 +31,7 @@
                     <section id="about" class="card section">
                         <h2>Про сервіс</h2>
                         <p>Edemium — це офіційний сайт бронювання нашої мережі. Тут ви бачите реальну наявність місць,
-                            актуальні ціни та детальний опис кожного типу номерів. Жодних посередників — ви взаємодієте
+                            актуальні ціни та детальний опис кожної послуги. Жодних посередників — ви взаємодієте
                             з готелем напряму.</p>
                     </section>
 
@@ -42,15 +44,15 @@
 
                     <section class="card section">
                         <h2>Лояльність до гостей</h2>
-                        <p>Ми цінуємо відповідальне ставлення. Для постійних гостей, які часто подорожують і не
-                            скасовують поїздки в останній момент, система спрощує процес: бронювання підтверджуються
-                            миттєво, без додаткових перевірок чи дзвінків від адміністратора.</p>
+                        <p>Ми довіряємо нашим гостям. Тому зробили процес оформлення максимально простим для кожного: ваші 
+                        бронювання підтверджуються миттєво, без додаткових перевірок чи обов'язкових дзвінків 
+                        від адміністратора.
+                        </p>
                     </section>
 
                     <section id="services" class="card section">
                         <h2>Можливості</h2>
-                        <p>Все необхідне в одному місці: пошук вільних номерів за датами, фільтри за ціною та
-                            зручностями, а також особистий кабінет, де зберігається вся історія ваших поїздок.</p>
+                        <p>Зручний каталог наших послуг: переглядайте фотографії, детальні описи та перелік зручностей, щоб легко обрати ідеальний варіант для вашого відпочинку.</p>
                     </section>
                 </div>
 
@@ -68,8 +70,8 @@
                         </div>
                     </div>
 
-                    <div class="card" style="margin-top:12px">
-                        <h3 style="margin:0 0 8px">Швидкі посилання</h3>
+                    <div class="card" >
+                        <h3 >Швидкі посилання</h3>
                         <ul class="quick-links">
                             <li><a th:href="@{privacy}">Політика конфіденційності</a></li>
                             <li><a th:href="@{terms}">Правила користування</a></li>
@@ -88,5 +90,7 @@
     <script th:src="@{common/js/header.js}"></script>
     <script sec:authorize="! isAuthenticated()"  th:src="@{common/js/login-overlay.js}"></script>
 </body>
+
+
 
 </html>

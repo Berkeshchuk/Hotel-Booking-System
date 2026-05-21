@@ -1,21 +1,24 @@
 package com.demo_hotel_service.services;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.demo_hotel_service.repositories.ServiceUnitRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 
-import com.demo_hotel_service.data.dto.ImageRecordDto;
-import com.demo_hotel_service.data.dto.ServiceUnitDto;
-import com.demo_hotel_service.data.dto.dto_mappers.ServiceUnitMapper;
+import com.common.dto.demo_hotel_service_dto.ImageRecordDto;
+import com.common.dto.demo_hotel_service_dto.ServiceUnitDto;
+import com.common.dto.demo_hotel_service_dto.ServiceUnitShortDto;
+import com.common.security.AuthPrincipal;
+import com.demo_hotel_service.data.dto_mappers.ServiceUnitMapper;
 import com.demo_hotel_service.data.models.hotel_offerings.abstraction.ServiceUnit;
 import com.demo_hotel_service.data.models.images.ImageRecord;
 
@@ -28,19 +31,20 @@ public class ServiceUnitService {
     private final ServiceUnitMapper serviceUnitMapper;
     private final ImageService imageService;
 
-    private final int DEFAULT_PAGE_NUMBER = 0;
-    private final int DEFAULT_PAGE_SIZE = 12;
+    // private final int DEFAULT_PAGE_NUMBER = 0;
+    // private final int DEFAULT_PAGE_SIZE = 12;
 
-    public String getServiceUnitsHtml(Model model, String template, String attributeName,
-            Class<? extends ServiceUnit> classType) {
-        List<ServiceUnitDto> serviceUnitDtos = getServiceUnits(classType,
-                PageRequest.of(DEFAULT_PAGE_NUMBER, DEFAULT_PAGE_SIZE));
-        model.addAttribute(attributeName, serviceUnitDtos);
-        return template;
-    }
+    // public String getServiceUnitsHtml(Model model, String template, String
+    // attributeName,
+    // Class<? extends ServiceUnit> classType) {
+    // List<ServiceUnitDto> serviceUnitDtos = getServiceUnits(classType,
+    // PageRequest.of(DEFAULT_PAGE_NUMBER, DEFAULT_PAGE_SIZE));
+    // model.addAttribute(attributeName, serviceUnitDtos);
+    // return template;
+    // }
 
-    public List<ServiceUnitDto> getServiceUnits(Class<? extends ServiceUnit> classType, Pageable pageable) {
-        List<ServiceUnit> serviceUnits = serviceUnitRepository.findByType(classType, pageable);
+    public List<ServiceUnitDto> getServiceUnits(AuthPrincipal principal, Class<? extends ServiceUnit> classType, Pageable pageable) {
+        List<ServiceUnit> serviceUnits = serviceUnitRepository.findByTypeFiltered(classType, isAdmin(principal), pageable);
         List<ServiceUnitDto> serviceUnitDtos = serviceUnitMapper.toPolymorphicDtos(serviceUnits);
         sortImageRecordsOfServiceUnits(serviceUnitDtos);
         return serviceUnitDtos;
@@ -55,10 +59,6 @@ public class ServiceUnitService {
     }
 
     public ServiceUnitDto addServiceUnit(ServiceUnitDto serviceUnitDto, List<MultipartFile> imageFiles) {
-        if (serviceUnitDto == null) {
-            throw new IllegalArgumentException("Data can't be null");
-        }
-
         if (imageFiles != null && !imageFiles.isEmpty()) {
             List<ImageRecordDto> imageDtos = imageService.prepareInitialImageDtos(imageFiles);
             serviceUnitDto.setImageRecords(imageDtos);
@@ -77,10 +77,6 @@ public class ServiceUnitService {
 
     @Transactional
     public ServiceUnitDto updateServiceUnit(ServiceUnitDto updatingData, List<MultipartFile> imageFiles) {
-        if (updatingData == null) {
-            throw new IllegalArgumentException("Data can't be null");
-        }
-
         ServiceUnit toUpdate = serviceUnitRepository.findById(updatingData.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Service not found"));
 
@@ -115,6 +111,45 @@ public class ServiceUnitService {
 
     private void sortImageRecordsOfServiceUnit(ServiceUnitDto serviceUnitDto) {
         serviceUnitDto.getImageRecords().sort((img1, img2) -> img1.getPosition() < img2.getPosition() ? 1 : -1);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ServiceUnitShortDto> searchShortServiceUnits(String searchTerm, String category, int limit) {
+        String term = (searchTerm == null) ? "" : searchTerm;
+        Pageable pageable = PageRequest.of(0, limit);
+
+        if ("SPA".equalsIgnoreCase(category)) {
+            // Викликається з worker-form та вкладки "Персонал"
+            return serviceUnitRepository.searchSpaUnitsShort(term, pageable);
+
+        } else if ("ROOM".equalsIgnoreCase(category)) {
+            // Викликається з вкладки "Фізичні приміщення" (якщо вибрано ROOM)
+            return serviceUnitRepository.searchRoomUnitsShort(term, pageable);
+
+        } else {
+            // Якщо категорія не вказана (змішаний пошук) - склеюємо результати в пам'яті
+            List<ServiceUnitShortDto> combined = new ArrayList<>();
+            // Зверни увагу: ділимо ліміт навпіл, щоб не витягнути занадто багато
+            combined.addAll(serviceUnitRepository.searchSpaUnitsShort(term, PageRequest.of(0, limit / 2)));
+            combined.addAll(serviceUnitRepository.searchRoomUnitsShort(term, PageRequest.of(0, limit / 2)));
+            return combined;
+        }
+    }
+
+    public List<ServiceUnitShortDto> getShortSpaUnitsByIds(Set<Long> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return List.of();
+        }
+        return serviceUnitRepository.findServiceUnitsShortByIds(ids);
+    }
+
+    private boolean isAdmin(AuthPrincipal principal){
+        boolean isAdmin = false;
+        if(principal != null && "ADMIN".equals(principal.getRole())){
+            isAdmin = true;
+        }
+
+        return isAdmin;
     }
 
 }

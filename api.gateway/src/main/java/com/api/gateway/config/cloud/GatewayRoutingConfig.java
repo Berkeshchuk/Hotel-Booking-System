@@ -1,7 +1,6 @@
 package com.api.gateway.config.cloud;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.gateway.server.mvc.common.MvcUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.Authentication;
@@ -14,10 +13,9 @@ import static org.springframework.cloud.gateway.server.mvc.handler.GatewayRouter
 import static org.springframework.cloud.gateway.server.mvc.handler.HandlerFunctions.http;
 import static org.springframework.web.servlet.function.RequestPredicates.path;
 
-import java.net.URI;
 
-import com.api.gateway.config.security.JwtUtil;
 import com.common.security.AuthPrincipal;
+import com.common.security.JwtUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -29,6 +27,8 @@ public class GatewayRoutingConfig {
     private String bookingServiceUrl;
     @Value("${user_service_url}")
     private String userServiceUrl;
+    @Value("${resource_service_url}")
+    private String resourceServiceUrl;
 
     @Bean
     public RouterFunction<ServerResponse> bookingRoute() {
@@ -36,52 +36,114 @@ public class GatewayRoutingConfig {
     }
 
     @Bean
+    public RouterFunction<ServerResponse> bookingAdminRoute() {
+        return buildServiceRoute("/api/admin/bookings**", bookingServiceUrl);
+    }
+
+    @Bean
     public RouterFunction<ServerResponse> roomRoute() {
         return buildServiceRoute("/api/rooms/**", bookingServiceUrl);
     }
     @Bean
+    public RouterFunction<ServerResponse> spaRoute() {
+        return buildServiceRoute("/api/spas/**", bookingServiceUrl);
+    }
+    @Bean
     public RouterFunction<ServerResponse> imageRoute() {
-        return buildServiceRoute("/api/images/**", bookingServiceUrl);
+        return buildServiceRoute("/api/image/**", bookingServiceUrl);
     }
 
     @Bean
     public RouterFunction<ServerResponse> uploadsRoute() {
         return buildPublicServiceRoute("/uploads/**", bookingServiceUrl);
     }
+
+    @Bean
+    public RouterFunction<ServerResponse> claimManualRoute() {
+        return buildPublicServiceRoute("/api/bookings/claim-manual", bookingServiceUrl);
+    }
+
     @Bean
     public RouterFunction<ServerResponse> signUpRoute() {
-        return buildPublicServiceRoute("/sign_up**", userServiceUrl);
+        return buildPublicServiceRoute("/api/sign_up**", userServiceUrl);
+    }
+
+    @Bean
+    public RouterFunction<ServerResponse> spaWorkersRoute() {
+        return buildServiceRoute("/api/spa-workers/**", resourceServiceUrl);
+    }
+
+    @Bean
+    public RouterFunction<ServerResponse> physicalUnitsRoute() {
+        return buildServiceRoute("/api/physical-units/**", resourceServiceUrl);
+    }
+
+    @Bean
+    public RouterFunction<ServerResponse> allocationsRoute() {
+        return buildServiceRoute("/api/allocations/**", resourceServiceUrl); 
+    }
+
+    @Bean
+    public RouterFunction<ServerResponse> serviceUnitsSearchRoute() {
+        return buildServiceRoute("/api/service-units/search**", bookingServiceUrl); 
+    }
+    
+    @Bean
+    public RouterFunction<ServerResponse> serviceUnitsSearchByIdsRoute() {
+        return buildServiceRoute("/api/service-units/short-by-ids**", bookingServiceUrl); 
+    }
+    @Bean
+    public RouterFunction<ServerResponse> serviceAllocationsCalendarRoute() {
+        return buildServiceRoute("/api/allocations/calendar", resourceServiceUrl); 
+    }
+    
+    @Bean
+    public RouterFunction<ServerResponse> userProfileRoute() {
+        // Будь-які запити на /api/users/** йдуть в User Service
+        return buildServiceRoute("/api/users/**", userServiceUrl); 
+    }
+
+    @Bean
+    public RouterFunction<ServerResponse> requestRegistrationOtpRoute() {
+        // Будь-які запити на /api/users/** йдуть в User Service
+        return buildServiceRoute("/api/request-registration-otp", userServiceUrl); 
+    }
+    @Bean
+    public RouterFunction<ServerResponse> requestResetPasswordOtpRoute() {
+        return buildServiceRoute("/api/request-reset-otp", userServiceUrl); 
+    }
+    @Bean
+    public RouterFunction<ServerResponse> requestResetPasswordRoute() {
+        return buildServiceRoute("/api/reset-password", userServiceUrl); 
     }
     
     private RouterFunction<ServerResponse> buildServiceRoute(String pattern, String targetUrl) {
         return route()
-            .route(path(pattern), http())
+            // ПЕРЕДАЄМО targetUrl ПРЯМО В http(). Він сам правильно додасть шлях!
+            .route(path(pattern), http(targetUrl))
             .filter((req, next) -> {
-                // Відразу створюємо білдер і вказуємо, куди проксіювати запит
-                ServerRequest.Builder builder = ServerRequest.from(req)
-                        .attribute(MvcUtils.GATEWAY_REQUEST_URL_ATTR, URI.create(targetUrl));
+                // Створюємо білдер для модифікації запиту
+                ServerRequest.Builder builder = ServerRequest.from(req);
 
+                // Дістаємо поточного юзера з сесії
                 Authentication auth = SecurityContextHolder.getContext().getAuthentication();
                 
                 if (auth != null && auth.getPrincipal() instanceof AuthPrincipal p) {
-                    String jwt = jwtUtil.generateUserToken(p.getId(), p.getLogin(), p.getRole());
+                    // Генеруємо JWT і кладемо в заголовок
+                    String jwt = jwtUtil.generateUserToken(p.getId(), p.getLogin(), p.getRole(), p.getPhoneNumber());
                     builder.header("Authorization", "Bearer " + jwt);
                 }
 
+                // Передаємо модифікований запит далі по ланцюжку
                 return next.handle(builder.build());
             })
-        .build();
+            .build();
     }
 
     private RouterFunction<ServerResponse> buildPublicServiceRoute(String pattern, String targetUrl) {
         return route()
-            .route(path(pattern), http())
-            .filter((req, next) -> {
-                // Відразу створюємо білдер і вказуємо, куди проксіювати запит
-                ServerRequest.Builder builder = ServerRequest.from(req)
-                        .attribute(MvcUtils.GATEWAY_REQUEST_URL_ATTR, URI.create(targetUrl));
-                return next.handle(builder.build());
-            })
-        .build();
+            // Просто передаємо targetUrl, ніяких ручних атрибутів
+            .route(path(pattern), http(targetUrl))
+            .build();
     }
 }

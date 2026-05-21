@@ -47,7 +47,7 @@ public class GeneralBooking {
     private String phoneNumber;
 
     @Enumerated(value = EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private BookingStatus status;
 
     @OneToMany(mappedBy = "generalBooking", cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
@@ -55,10 +55,6 @@ public class GeneralBooking {
 
     @Column(length = 2000)
     private String clientComment;
-
-    public List<BookingUnit> getBookingUnits(){
-        return List.copyOf(bookingUnits);
-    }
 }
 
 // 1. Знайти всі кімнати де:

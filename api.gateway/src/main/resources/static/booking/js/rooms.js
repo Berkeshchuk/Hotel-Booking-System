@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initializePutFormEvent()
     initializeDeleteModalOpenerEvent();
     InitializeDeleteRoomEvent();
+
     initializeFormOverlayClick();
     initializeImageSliders()
     initializeLightbox()
@@ -126,6 +127,7 @@ function initializePostFormEvent() {
                     price: parseFloat(postForm.querySelector("input[name='price']").value),
                     description: postForm.querySelector("textarea[name='description']").value,
                     type: postForm.querySelector("input[name='type']").value,
+                    hiddenFromClient: postForm.querySelector("input[name='hiddenFromClient']").checked,
                     guestCapacity: postForm.querySelector("input[name='guestCapacity']").value,
                     facilities: facilities,
                     classType: "ROOM"
@@ -153,9 +155,9 @@ function initializePostFormEvent() {
                 })
 
                 if (!res.ok) {
-                    const errorText = await res.text()
-                    alert("Помилка при створенні кімнати. Спробуйте ще раз.")
-                    return
+                    const errorData = await res.json(); // Читаємо як JSON
+                    alert(errorData.error);             // Виводимо поле error
+                    return;
                 }
 
                 window.location.reload()
@@ -179,48 +181,49 @@ function initializePostModalOpenerEvent() {
 }
 
 function initializeEditModalOpenerEvent() {
-    const editModalOpeners = document.querySelectorAll(".edit-modal-opener");
     const putFormContainer = document.querySelector(".put-form-container");
-    const putForm = document.getElementById("put-form");
     const putFacilitiesContainer = document.getElementById("put-facilities");
+    const gridContainer = document.querySelector(".cards-grid");
 
-    if (editModalOpeners.length > 0) {
-        editModalOpeners.forEach(modalOpener => {
-            modalOpener.addEventListener("click", (event) => {
-                const card = event.target.closest(".room-card");
+    if (!gridContainer || !putFormContainer) return;
 
-                const roomId = card.getAttribute("data-room-id");
-                const priceText = card.querySelector(".room-meta span:nth-child(1)").textContent;
-                const price = parseFloat(priceText);
-                const capacityText = card.querySelector(".room-meta span:nth-child(2)").textContent;
-                const capacity = parseInt(capacityText);
-                const type = card.querySelector("h3").textContent;
-                const description = card.querySelector("p").textContent;
+    gridContainer.addEventListener("click", (event) => {
+        // Перевіряємо, чи клік був саме по кнопці редагування
+        const opener = event.target.closest(".edit-modal-opener");
+        if (!opener) return;
 
-                const facilityElements = card.querySelectorAll(".room-facility-tag");
-                const facilities = Array.from(facilityElements).map(el => {
-                    let text = el.textContent.trim();
-                    // Видаляємо лапки на початку та в кінці рядка, якщо вони є
-                    if (text.startsWith('"') && text.endsWith('"')) {
-                        text = text.substring(1, text.length - 1);
-                    }
-                    return text;
-                });
+        const card = opener.closest(".room-card");
 
-                document.getElementById("put-room-id").value = roomId;
-                document.getElementById("put-price").value = price;
-                document.getElementById("put-type").value = type;
-                document.getElementById("put-capacity").value = capacity;
-                document.getElementById("put-description").value = description;
+        const roomId = card.getAttribute("data-service-id");
+        const priceText = card.querySelector(".room-meta span:nth-child(1)").textContent;
+        const price = parseFloat(priceText);
+        const capacityText = card.querySelector(".room-meta span:nth-child(2)").textContent;
+        const capacity = parseInt(capacityText);
+        const type = card.querySelector("h3").textContent;
+        const description = card.querySelector("p").textContent;
 
-                if (putFacilitiesContainer && putFacilitiesContainer.clearAndSetFacilities) {
-                    putFacilitiesContainer.clearAndSetFacilities(facilities);
-                }
-
-                putFormContainer.classList.remove("hidden");
-            });
+        const facilityElements = card.querySelectorAll(".room-facility-tag");
+        const facilities = Array.from(facilityElements).map(el => {
+            let text = el.textContent.trim();
+            if (text.startsWith('"') && text.endsWith('"')) {
+                text = text.substring(1, text.length - 1);
+            }
+            return text;
         });
-    }
+
+        document.getElementById("put-room-id").value = roomId;
+        document.getElementById("put-price").value = price;
+        document.getElementById("put-type").value = type;
+        document.getElementById("put-capacity").value = capacity;
+        document.getElementById("put-description").value = description;
+        document.getElementById("put-hidden").checked = card.getAttribute("data-hidden") === "true";
+
+        if (putFacilitiesContainer && putFacilitiesContainer.clearAndSetFacilities) {
+            putFacilitiesContainer.clearAndSetFacilities(facilities);
+        }
+
+        putFormContainer.classList.remove("hidden");
+    });
 }
 
 function initializePutFormEvent() {
@@ -242,6 +245,7 @@ function initializePutFormEvent() {
                     price: parseFloat(putForm.querySelector("#put-price").value),
                     description: putForm.querySelector("#put-description").value,
                     type: putForm.querySelector("#put-type").value,
+                    hiddenFromClient: putForm.querySelector("input[name='hiddenFromClient']").checked,
                     guestCapacity: putForm.querySelector("#put-capacity").value,
                     facilities: facilities,
                     classType: "ROOM"
@@ -269,9 +273,9 @@ function initializePutFormEvent() {
                 })
 
                 if (!res.ok) {
-                    const errorText = await res.text()
-                    alert("Помилка при оновленні кімнати. Спробуйте ще раз.")
-                    return
+                    const errorData = await res.json(); // Читаємо як JSON
+                    alert(errorData.error);             // Виводимо поле error
+                    return;
                 }
 
                 window.location.reload()
@@ -304,23 +308,23 @@ function initializeFormOverlayClick() {
 }
 
 function initializeDeleteModalOpenerEvent() {
-    const deleteModalOpeners = document.querySelectorAll(".delete-modal-opener");
     const deleteModal = document.querySelector(".delete-modal-window");
     const confirmDeleteBtn = document.querySelector(".confirm-delete-btn");
+    const gridContainer = document.querySelector(".cards-grid");
 
-    if (!deleteModal) return;
+    if (!deleteModal || !gridContainer) return;
 
-    if (deleteModalOpeners.length > 0) {
-        deleteModalOpeners.forEach(opener => {
-            opener.addEventListener("click", (event) => {
-                const card = event.target.closest(".room-card");
-                const roomId = card.getAttribute("data-room-id");
+    gridContainer.addEventListener("click", (event) => {
+        // Перевіряємо, чи клік був саме по кнопці видалення
+        const opener = event.target.closest(".delete-modal-opener");
+        if (!opener) return;
 
-                confirmDeleteBtn.setAttribute("data-room-id", roomId);
-                deleteModal.classList.remove("hidden");
-            });
-        });
-    }
+        const card = opener.closest(".room-card");
+        const roomId = card.getAttribute("data-service-id");
+
+        confirmDeleteBtn.setAttribute("data-service-id", roomId);
+        deleteModal.classList.remove("hidden");
+    });
 }
 
 function InitializeDeleteRoomEvent() {
@@ -329,7 +333,7 @@ function InitializeDeleteRoomEvent() {
 
     if (confirmDeleteBtn) {
         confirmDeleteBtn.addEventListener("click", async (event) => {
-            const roomId = event.target.getAttribute("data-room-id");
+            const roomId = event.target.getAttribute("data-service-id");
             if (!roomId) return;
 
             const tokenHeader = document.querySelector('meta[name="_csrf_header"]').content;
@@ -344,7 +348,7 @@ function InitializeDeleteRoomEvent() {
                 });
 
                 if (res.ok) {
-                    const cardToRemove = document.querySelector(`.room-card[data-room-id="${roomId}"]`);
+                    const cardToRemove = document.querySelector(`.room-card[data-service-id="${roomId}"]`);
                     if (cardToRemove) cardToRemove.remove();
 
                     deleteModal.classList.add("hidden");
@@ -464,8 +468,13 @@ function initializeLightbox() {
         dropdown.classList.add("hidden");
     };
 
-    document.querySelectorAll(".room-image-container").forEach(container => {
-        container.addEventListener("click", (e) => {
+    const gridContainer = document.querySelector(".cards-grid");
+    if (gridContainer) {
+        gridContainer.addEventListener("click", (e) => {
+            // Шукаємо, чи був клік всередині контейнера з фотографіями
+            const container = e.target.closest(".room-image-container");
+            if (!container) return; // Якщо клік був в іншому місці картки - ігноруємо
+
             if (e.target.closest(".slider-btn")) return;
 
             const imageElements = Array.from(container.querySelectorAll(".room-slide-image"));
@@ -490,7 +499,34 @@ function initializeLightbox() {
             updateLightboxView();
             lightbox.classList.remove("hidden");
         });
-    });
+    }
+    // document.querySelectorAll(".room-image-container").forEach(container => {
+    //     container.addEventListener("click", (e) => {
+    //         if (e.target.closest(".slider-btn")) return;
+
+    //         const imageElements = Array.from(container.querySelectorAll(".room-slide-image"));
+    //         if (imageElements.length === 0) return;
+
+    //         currentImages = imageElements.map(img => ({
+    //             id: img.getAttribute("data-id"),
+    //             src: img.getAttribute("src"),
+    //             element: img
+    //         }));
+
+    //         const clickedImg = e.target.closest(".room-slide-image");
+    //         if (clickedImg) {
+    //             currentIndex = currentImages.findIndex(img => img.id === clickedImg.getAttribute("data-id"));
+    //         } else {
+    //             const activeImg = container.querySelector(".room-slide-image.active");
+    //             currentIndex = currentImages.findIndex(img => img.id === activeImg.getAttribute("data-id"));
+    //         }
+
+    //         if (currentIndex === -1) currentIndex = 0;
+
+    //         updateLightboxView();
+    //         lightbox.classList.remove("hidden");
+    //     });
+    // });
 
     closeBtn.addEventListener("click", () => lightbox.classList.add("hidden"));
 
@@ -526,6 +562,10 @@ function initializeLightbox() {
     if (deleteBtn) {
         deleteBtn.addEventListener("click", async () => {
             const imageObj = currentImages[currentIndex];
+            
+            // 👇 КРИТИЧНО: Знаходимо контейнер на картці ДО видалення картинки з DOM
+            const container = imageObj.element ? imageObj.element.closest(".room-image-container") : null;
+
             const tokenHeader = document.querySelector("meta[name='_csrf_header']").content;
             const token = document.querySelector("meta[name='_csrf']").content;
 
@@ -533,7 +573,6 @@ function initializeLightbox() {
                 deleteBtn.textContent = "Видалення...";
 
                 const baseUrl = deleteBtn.getAttribute("data-url");
-
                 const encodedImageUrl = encodeURIComponent(imageObj.src);
 
                 const res = await fetch(`${baseUrl}?imageId=${imageObj.id}&imageUrl=${encodedImageUrl}`, {
@@ -543,6 +582,7 @@ function initializeLightbox() {
 
                 if (!res.ok) throw new Error("Помилка видалення на сервері");
 
+                // Видаляємо картинку з повзунка слайдера на картці
                 if (imageObj.element) {
                     imageObj.element.remove();
                 }
@@ -556,6 +596,11 @@ function initializeLightbox() {
                     updateLightboxView();
                 } else {
                     lightbox.classList.add("hidden");
+                    
+                    // 👇 ЯКЩО ФОТО БІЛЬШЕ НЕМАЄ: Підставляємо дефолтну заглушку
+                    if (container) {
+                        container.innerHTML = `<img class="room-slide-image active" src="/common/images/placeholder.png" alt="Зображення відсутнє">`;
+                    }
                 }
 
             } catch (error) {
@@ -570,7 +615,7 @@ function initializeLightbox() {
 
 function initializeInfiniteScroll() {
 
-    const gridContainer = document.querySelector(".room-container2");
+    const gridContainer = document.querySelector(".cards-grid");
     if (!gridContainer) {
         return;
     }
@@ -604,8 +649,13 @@ function initializeInfiniteScroll() {
         const isAdmin = document.querySelector(".edit-modal-opener") !== null;
 
         const card = document.createElement("div");
-        card.className = "card room-card";
-        card.setAttribute("data-room-id", room.id);
+        card.className = "card room-card " + (room.hiddenFromClient == true ? "room-card-client-hidden" : "");;
+        card.setAttribute("data-service-id", room.id);
+        card.setAttribute("data-hidden", room.hiddenFromClient === true);
+
+        const hiddenBadgeHtml = room.hiddenFromClient ? `
+            <div class="admin-hidden-badge">Приховано</div>
+        ` : '';
 
         let imagesHtml = '';
         let navButtonsHtml = '';
@@ -613,7 +663,10 @@ function initializeInfiniteScroll() {
         if (room.imageRecords && room.imageRecords.length > 0) {
             room.imageRecords.forEach((img, index) => {
                 const activeClass = index === 0 ? "active" : "";
-                imagesHtml += `<img class="room-slide-image ${activeClass}" data-id="${img.id}" src="${img.url}" alt="${img.position || index + 1}">`;
+                // Перевіряємо, чи є url. Якщо ні - ставимо заглушку
+                const imageUrl = img.url ? img.url : "/common/images/placeholder.png";
+                
+                imagesHtml += `<img class="room-slide-image ${activeClass}" data-id="${img.id}" src="${imageUrl}" alt="${img.position || index + 1}">`;
             });
 
             if (room.imageRecords.length > 1) {
@@ -623,7 +676,9 @@ function initializeInfiniteScroll() {
                 `;
             }
         } else {
-            imagesHtml = `<img class="room-slide-image active" src="" alt="No image">`;
+            // Додаємо заглушку, якщо масив порожній
+            // Додано клас "active", щоб заглушка одразу відображалася (залежить від вашого CSS)
+            imagesHtml = `<img class="room-slide-image active" src="/common/images/placeholder.png" alt="Зображення відсутнє">`;
         }
 
         const facilitiesHtml = (room.facilities || []).map(fac =>
@@ -638,22 +693,54 @@ function initializeInfiniteScroll() {
         ` : "";
 
         card.innerHTML = `
+            ${hiddenBadgeHtml}
             <div class="room-image-container js-loaded">
                 ${imagesHtml}
                 ${navButtonsHtml}
             </div>
+
             <div class="room-card-content">
                 <div class="room-meta">
-                    <span>${room.price.toFixed(2)} / ніч</span>
+                    <span>${room.price} / доба</span>
                     <span>${room.guestCapacity} гостей</span>
                 </div>
+
                 <h3>${room.type || "Не вказано"}</h3>
                 <p>${room.description || ""}</p>
+
                 <h4>Зручності:</h4>
                 <div class="facilities-list">
                     ${facilitiesHtml}
                 </div>
+
+                <div class="user-actions-container">
+                    <button class="cta btn-select full-width"
+                        data-service-id="${room.id}"
+                        data-service-type="${room.type}"
+                        data-service-price="${room.price}"
+                        data-service-capacity="${room.guestCapacity}"
+                        data-class-type="ROOM">
+                        Обрати
+                    </button>
+
+                    <div class="service-quantity-controls hidden"
+                        data-service-id="${room.id}">
+                        
+                        <button class="btn-qty-minus"
+                            data-service-id="${room.id}">-</button>
+
+                        <span class="service-qty-value"
+                            data-service-id="${room.id}">1</span>
+
+                        <button class="btn-qty-plus"
+                            data-service-id="${room.id}"
+                            data-service-type="${room.type}"
+                            data-service-price="${room.price}"
+                            data-service-capacity="${room.guestCapacity}">+</button>
+                    </div>
+                </div>
             </div>
+
             ${adminButtonsHtml}
         `;
 
@@ -733,6 +820,97 @@ function initializeInfiniteScroll() {
         });
     }
 }
+
+// function initializeRoomCartInteractions() {
+//     // Логіка карток (UI та LocalStorage) ТІЛЬКИ для сторінки rooms.html
+//     function syncRoomCardsUI() {
+//         let cart = JSON.parse(localStorage.getItem('edemium_cart')) || [];
+        
+//         const counts = {};
+//         cart.forEach(item => {
+//             counts[item.serviceUnitId] = (counts[item.serviceUnitId] || 0) + 1;
+//         });
+
+//         document.querySelectorAll('.room-card').forEach(card => {
+//             const serviceId = parseInt(card.dataset.roomId);
+//             const count = counts[serviceId] || 0;
+            
+//             const selectBtn = card.querySelector('.btn-select-room');
+//             const controlsBlock = card.querySelector('.service-quantity-controls');
+//             const qtySpan = card.querySelector('.service-qty-value');
+
+//             if (count > 0) {
+//                 card.classList.add('selected-in-cart');
+//                 if(selectBtn) selectBtn.classList.add('hidden');
+//                 if(controlsBlock) controlsBlock.classList.remove('hidden');
+//                 if(qtySpan) qtySpan.textContent = count;
+//             } else {
+//                 card.classList.remove('selected-in-cart');
+//                 if(selectBtn) selectBtn.classList.remove('hidden');
+//                 if(controlsBlock) controlsBlock.classList.add('hidden');
+//             }
+//         });
+
+//         // Викликаємо глобальну функцію з header.js для оновлення бейджа
+//         if (typeof window.updateGlobalCartBadge === 'function') {
+//             window.updateGlobalCartBadge();
+//         }
+//     }
+
+//     function addToCart(btn) {
+//         const newItem = {
+//             id: Date.now(),
+//             serviceUnitId: parseInt(btn.dataset.serviceId),
+//             serviceName: btn.dataset.serviceType,
+//             price: parseFloat(btn.dataset.servicePrice),
+//             maxCapacity: parseInt(btn.dataset.serviceCapacity),
+//             start: '', 
+//             end: '',   
+//             clientCount: 1 
+//         };
+
+//         let cart = JSON.parse(localStorage.getItem('edemium_cart')) || [];
+//         cart.push(newItem);
+//         localStorage.setItem('edemium_cart', JSON.stringify(cart));
+        
+//         syncRoomCardsUI();
+        
+//         // Викликаємо глобальну анімацію з header.js
+//         if (typeof window.triggerGlobalCartNudge === 'function') {
+//             window.triggerGlobalCartNudge();
+//         }
+//     }
+
+//     function removeFromCart(serviceId) {
+//         let cart = JSON.parse(localStorage.getItem('edemium_cart')) || [];
+//         const indexToRemove = cart.map(item => item.serviceUnitId).lastIndexOf(parseInt(serviceId));
+        
+//         if (indexToRemove !== -1) {
+//             cart.splice(indexToRemove, 1);
+//             localStorage.setItem('edemium_cart', JSON.stringify(cart));
+//             syncRoomCardsUI();
+            
+//             // Додай цей виклик, щоб при мінусуванні хедер теж виїжджав
+//             if (typeof window.triggerGlobalCartNudge === 'function') {
+//                 window.triggerGlobalCartNudge();
+//             }
+//         }
+//     }
+
+//     // Делегування подій для карток на сторінці rooms
+//     document.body.addEventListener('click', (e) => {
+//         if (e.target.classList.contains('btn-select-room') || e.target.classList.contains('btn-qty-plus')) {
+//             addToCart(e.target);
+//         }
+        
+//         if (e.target.classList.contains('btn-qty-minus')) {
+//             removeFromCart(e.target.dataset.serviceId);
+//         }
+//     });
+
+//     // Початкова синхронізація при завантаженні
+//     syncRoomCardsUI();
+// }
 
 
 

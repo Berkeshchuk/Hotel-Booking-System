@@ -19,14 +19,14 @@ public class UserMapper {
             entity.setRole(dto.getRole());
         if (dto.getPassword() != null)
             entity.setHashPassword(dto.getPassword());
-        if (dto.getEmail() != null)
-            entity.setEmail(dto.getEmail());
+        // if (dto.getEmail() != null)
+        //     entity.setEmail(dto.getEmail());
         if (dto.getPhoneNumber() != null)
             entity.setPhoneNumber(dto.getPhoneNumber());
-        if (dto.getTrustLevel() != null)
-            entity.setTrustLevel(dto.getTrustLevel());
-        if (dto.getConsecutiveCancellations() != null)
-            entity.setConsecutiveCancellations(dto.getConsecutiveCancellations());
+        // if (dto.getTrustLevel() != null)
+        //     entity.setTrustLevel(dto.getTrustLevel());
+        // if (dto.getConsecutiveCancellations() != null)
+        //     entity.setConsecutiveCancellations(dto.getConsecutiveCancellations());
 
         return entity;
     }
@@ -40,10 +40,10 @@ public class UserMapper {
         dto.setId(entity.getId());
         dto.setLogin(entity.getLogin());
         dto.setRole(entity.getRole());
-        dto.setEmail(entity.getEmail());
+        // dto.setEmail(entity.getEmail());
         dto.setPhoneNumber(entity.getPhoneNumber());
-        dto.setTrustLevel(entity.getTrustLevel());
-        dto.setConsecutiveCancellations(entity.getConsecutiveCancellations());
+        // dto.setTrustLevel(entity.getTrustLevel());
+        // dto.setConsecutiveCancellations(entity.getConsecutiveCancellations());
         dto.setRegistered(entity.getRegistered());
 
         return dto;
@@ -61,13 +61,13 @@ public class UserMapper {
         if (dto.getPassword() != null)
             entity.setHashPassword(dto.getPassword());
         if (dto.getEmail() != null)
-            entity.setEmail(dto.getEmail());
+            // entity.setEmail(dto.getEmail());
         if (dto.getPhoneNumber() != null)
             entity.setPhoneNumber(dto.getPhoneNumber());
-        if (dto.getTrustLevel() != null)
-            entity.setTrustLevel(dto.getTrustLevel());
-        if (dto.getConsecutiveCancellations() != null)
-            entity.setConsecutiveCancellations(dto.getConsecutiveCancellations());
+        // if (dto.getTrustLevel() != null)
+        //     entity.setTrustLevel(dto.getTrustLevel());
+        // if (dto.getConsecutiveCancellations() != null)
+        //     entity.setConsecutiveCancellations(dto.getConsecutiveCancellations());
 
         return entity;
     }

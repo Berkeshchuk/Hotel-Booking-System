@@ -18,57 +18,110 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
+
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
-    // private final AuthenticationManager authenticationManager;
-    // private final RememberMeServices rememberMeServices;
+    private final OtpService otpService;
+    private final BookingIntegrationService bookingIntegrationService;
 
-    @Transactional
-    public void addUser(UserDto dto) {
-        if (dto == null) {
-            throw new IllegalArgumentException("cant be null");
-        }
-        if (userRepository.existsByLogin(dto.getLogin())) {
-            throw new LoginAlreadyInUseException("login already in use");
-        }
+    public AuthPrincipalDto loadUserByUsername(String identifier) {
+        // identifier може містити як логін, так і номер телефону
+        User user = userRepository.findByLoginOrPhoneNumber(identifier, identifier)
+                .orElseThrow(
+                        () -> new UsernameNotFoundException("Користувача з таким логіном або номером не знайдено"));
 
-        User entity = userMapper.toEntity(dto);
-        entity.setHashPassword(passwordEncoder.encode(dto.getPassword()));
-        entity.setRole("USER");
-        entity.setAccountState(AccountState.ACTIVE);
-        entity.setTrustLevel(0);
-        entity.setConsecutiveCancellations(0);
-        userRepository.save(entity);
-    }
-
-    public AuthPrincipalDto loadUserByUsername(String login) throws UsernameNotFoundException {
-        if (login == null) {
-            throw new IllegalArgumentException();
-        }
-
-        User user = userRepository.findByLogin(login)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
-        var authPrincipal = new AuthPrincipalDto();
+        AuthPrincipalDto authPrincipal = new AuthPrincipalDto();
         authPrincipal.setId(user.getId());
         authPrincipal.setLogin(user.getLogin());
-        authPrincipal.setMobileNumber(user.getPhoneNumber());
+        authPrincipal.setPhoneNumber(user.getPhoneNumber());
         authPrincipal.setPassword(user.getHashPassword());
         authPrincipal.setRole(user.getRole());
         authPrincipal.setIsEnabled(true);
         authPrincipal.setIsAccountNonLocked(user.getAccountState() != AccountState.BLOCKED);
+
         return authPrincipal;
     }
 
-    public void resetPassword() {
-    }
-
-    // при оновленні логіна потрібно оновити і відповідний username в таблиці
+    // TODO: при оновленні логіна потрібно оновити і відповідний username в таблиці
     // persistanse_logins
-    // бо redis-сесія спробує загрузити користувача із старим логіном(username),
-    // який не змінився в persistanse_logins
     public void updateLogin() {
+        // Логіка оновлення логіна
     }
 
+    public void requestPhoneVerification(String phoneNumber) {
+        if (userRepository.existsByPhoneNumber(phoneNumber)) {
+            throw new IllegalArgumentException("Цей номер телефону вже зареєстрований.");
+        }
+        otpService.generateAndSendOtp(phoneNumber);
+    }
+
+    public void requestRegistrationOtp(String login, String phoneNumber) {
+        if (userRepository.existsByLogin(login)) {
+            throw new LoginAlreadyInUseException("Цей логін вже використовується.");
+        }
+        if (userRepository.existsByPhoneNumber(phoneNumber)) {
+            throw new IllegalArgumentException("Цей номер телефону вже зареєстрований.");
+        }
+        otpService.generateAndSendOtp(phoneNumber);
+    }
+
+    @Transactional
+    public void verifyAndAddUser(UserDto dto, String otpCode) {
+        if (!otpService.validateOtp(dto.getPhoneNumber(), otpCode)) {
+            throw new IllegalArgumentException("Неправильний або прострочений код підтвердження.");
+        }
+        if (userRepository.existsByLogin(dto.getLogin())) {
+            throw new LoginAlreadyInUseException("Логін вже використовується");
+        }
+
+        User savedUser = userMapper.toEntity(dto);
+        savedUser.setHashPassword(passwordEncoder.encode(dto.getPassword()));
+        savedUser.setRole("USER");
+        savedUser.setAccountState(AccountState.ACTIVE);
+        // savedUser.setTrustLevel(0);
+        // savedUser.setConsecutiveCancellations(0);
+
+        userRepository.save(savedUser);
+        bookingIntegrationService.claimBookingsForUser(savedUser.getId(), savedUser.getPhoneNumber());
+    }
+
+    @Transactional
+    public void verifyAndChangePhone(Long userId, String newPhone, String otpCode) {
+        if (!otpService.validateOtp(newPhone, otpCode)) {
+            throw new IllegalArgumentException("Неправильний або прострочений код підтвердження.");
+        }
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Користувача не знайдено."));
+
+        user.setPhoneNumber(newPhone);
+        userRepository.save(user);
+
+        bookingIntegrationService.claimBookingsForUser(user.getId(), user.getPhoneNumber());
+    }
+
+    public void requestResetOtp(String phoneNumber) {
+        if (!userRepository.existsByPhoneNumber(phoneNumber)) {
+            throw new IllegalArgumentException("Користувача з таким номером телефону не знайдено.");
+        }
+        otpService.generateAndSendOtp(phoneNumber);
+    }
+
+    @Transactional
+    public void resetPassword(String phoneNumber, String otpCode, String newPassword) {
+        if (!otpService.validateOtp(phoneNumber, otpCode)) {
+            throw new IllegalArgumentException("Неправильний або прострочений код підтвердження.");
+        }
+
+        User user = userRepository.findByPhoneNumber(phoneNumber)
+                .orElseThrow(() -> new IllegalArgumentException("Користувача не знайдено."));
+
+        user.setHashPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+    }
+
+    public boolean existsByPhoneNumber(String phoneNumber) {
+        return userRepository.existsByPhoneNumber(phoneNumber);
+    }
 }

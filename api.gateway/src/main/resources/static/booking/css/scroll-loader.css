@@ -1,49 +1,78 @@
+/* ==========================================================================
+   НЕСКІНЧЕННИЙ СКРОЛ (Спільні стилі для всього сайту)
+   ========================================================================== */
 .infinite-scroll-status {
     width: 100%;
-    padding: 20px 0;
     text-align: center;
-    min-height: 80px;
+    padding: 30px 20px;
+    color: var(--muted, #64748b);
+    font-size: 14px;
     display: flex;
     justify-content: center;
     align-items: center;
+    min-height: 80px;
 }
 
-.scroll-loader, .scroll-error, .scroll-end {
+.scroll-loader, 
+.scroll-error, 
+.scroll-end {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
-    color: #666;
+    gap: 12px;
 }
 
-.scroll-loader.hidden, .scroll-error.hidden, .scroll-end.hidden {
+/* Гарантоване приховування */
+.scroll-loader.hidden, 
+.scroll-error.hidden, 
+.scroll-end.hidden {
     display: none !important; 
 }
 
+/* Сучасний спінер */
 .spinner {
-    width: 30px;
-    height: 30px;
-    border: 3px solid rgba(0, 0, 0, 0.1);
+    width: 32px;
+    height: 32px;
+    border: 3px solid #e2e8f0;
+    border-top: 3px solid var(--accent, #3b82f6);
     border-radius: 50%;
-    border-top-color: #3498db;
-    animation: spin 1s ease-in-out infinite;
+    animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
-    to { transform: rotate(360deg); }
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
+.scroll-error {
+    color: #ef4444;
+}
+
+/* Кнопка повторної спроби */
 .retry-btn {
+    margin-top: 10px;
+    padding: 8px 20px;
+    border-radius: 6px;
+    border: 1px solid var(--border, #cbd5e1);
     background: white;
-    border: 1px solid #ccc;
-    padding: 8px 16px;
-    border-radius: 20px;
     cursor: pointer;
-    font-weight: 500;
-    transition: all 0.2s;
+    font-weight: 600;
+    color: #334155;
+    transition: background 0.2s, border-color 0.2s;
 }
 
 .retry-btn:hover {
-    background: #f0f0f0;
-    border-color: #999;
+    background: #f1f5f9;
+    border-color: #94a3b8;
+}
+
+/* Гарна плашка "Ви переглянули всі..." */
+.scroll-end p {
+    font-weight: 500;
+    background: #f8fafc;
+    padding: 10px 20px;
+    border-radius: 8px;
+    display: inline-block;
+    margin: 0;
+    border: 1px solid var(--border, #e2e8f0);
 }

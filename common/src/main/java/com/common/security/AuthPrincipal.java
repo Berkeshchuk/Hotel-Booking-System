@@ -18,7 +18,7 @@ public class AuthPrincipal implements UserDetails {
     private String login;
     private String password; 
     private String role;    
-    private String mobileNumber;
+    private String phoneNumber;
     private Boolean isEnabled;
     private Boolean isAccountNonLocked;
 
@@ -27,7 +27,7 @@ public class AuthPrincipal implements UserDetails {
         this.login = dto.getLogin();
         this.password = dto.getPassword(); 
         this.role = dto.getRole(); 
-        this.mobileNumber = dto.getMobileNumber();
+        this.phoneNumber = dto.getPhoneNumber();
         this.isEnabled = dto.getIsEnabled();
         this.isAccountNonLocked = dto.getIsAccountNonLocked();
     }

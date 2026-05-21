@@ -1,9 +1,18 @@
 package com.demo_resource_service.data.models;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.DayOfWeek;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,13 +28,31 @@ import lombok.Setter;
 public class WorkerSchedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "worker_id")
+    @JoinColumn(name = "worker_id", nullable = false)
+    @JsonIgnore
     private SpaWorker worker;
 
-    private LocalDate date;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime; 
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(
+        name = "worker_schedule_breaks", 
+        joinColumns = @JoinColumn(name = "worker_schedule_id")
+    )
+    private List<ScheduleBreak> breaks = new ArrayList<>();
+
+    // ЗМІНЕНО: Тепер це день тижня (MONDAY, TUESDAY...)
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private DayOfWeek dayOfWeek; 
+
+    // ЗМІНЕНО: Тільки час (напр., 09:00)
+    @Column(nullable = false)
+    private LocalTime startTime; 
+    
+    // ЗМІНЕНО: Тільки час (напр., 18:00)
+    @Column(nullable = false)
+    private LocalTime endTime; 
 }
+
